@@ -139,9 +139,8 @@ static void init()
 
 static void deinit()
 {
-    window_destroy(s_main_window);
-
     tick_timer_service_unsubscribe();
+    window_destroy(s_main_window);
 }
 
 int main()
