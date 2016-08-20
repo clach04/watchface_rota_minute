@@ -11,8 +11,11 @@ static void minute_display_update_proc(Layer *layer, GContext* ctx)
     time_t    now = time(NULL);
     struct tm *t = localtime(&now);
 
-    //unsigned int angle = t->tm_min * 6;
+#ifdef DEBUG
     unsigned int angle = t->tm_sec * 6; // Seconds for debug reasons
+#else
+    unsigned int angle = t->tm_min * 6;
+#endif
     GRect        bounds = layer_get_bounds(layer);
 
 
@@ -127,8 +130,11 @@ static void init()
     });
     window_stack_push(s_main_window, true);
 
-    //tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
+#ifdef DEBUG
     tick_timer_service_subscribe(SECOND_UNIT, handle_minute_tick); // for debug reasons
+#else
+    tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
+#endif
 }
 
 static void deinit()
