@@ -20,7 +20,6 @@ static void minute_display_update_proc(Layer *layer, GContext* ctx)
 
 
     // https://developer.pebble.com/docs/c/Graphics/Graphics_Context/
-    // graphics_context_set_text_color(GContext * ctx, GColor color)
     //graphics_context_set_antialiased(ctx, true);
     //graphics_context_set_antialiased(ctx, false);
     graphics_context_set_stroke_color(ctx, GColorRed);
@@ -45,6 +44,7 @@ static void hour_display_update_proc(Layer *layer, GContext* ctx)
     GPoint center = grect_center_point(&bounds);
     GFont  font=fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49);
 
+    graphics_context_set_text_color(ctx, GColorWhite);
     if (clock_is_24h_style() == true)
     {
         // 24h hour format
@@ -100,6 +100,7 @@ static void main_window_load(Window *window)
 {
     Layer *window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_bounds(window_layer);
+    window_set_background_color(s_main_window, GColorBlack);
 
     s_minute_display_layer = layer_create(bounds);
     layer_set_update_proc(s_minute_display_layer, minute_display_update_proc);
@@ -122,7 +123,6 @@ static void main_window_unload(Window *window)
 static void init()
 {
     s_main_window = window_create();
-    window_set_background_color(s_main_window, GColorBlack);
     window_set_window_handlers(s_main_window, (WindowHandlers)
     {
         .load = main_window_load,
