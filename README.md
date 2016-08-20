@@ -1,2 +1,3 @@
-# watchface_rota_minute
-Analog digital hybrid Pebble watchface
+# Watchface Rota Minute
+
+Analog digital hybrid Pebble watchface.

@@ -1,0 +1,31 @@
+{
+    "author": "clach04",
+    "dependencies": {},
+    "keywords": [
+        "pebble-app"
+    ],
+    "name": "rota-minute",
+    "pebble": {
+        "capabilities": [
+            ""
+        ],
+        "displayName": "Rota Minute",
+        "enableMultiJS": true,
+        "messageKeys": [],
+        "projectType": "native",
+        "resources": {
+            "media": []
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "chalk"
+        ],
+        "uuid": "0b9136c9-578f-4752-8ea5-9f389894a393",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.0.0"
+}
