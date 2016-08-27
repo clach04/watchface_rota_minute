@@ -1,5 +1,14 @@
 #pragma once
 
+#define SETUP_TIME setup_time
+#define CLEANUP_TIME cleanup_time
+#define TICK_HANDLER handle_minute_tick
+#define NO_TEXT_TIME_LAYER
+#define DEBUG
+#ifdef DEBUG
+#define TICK_HANDLER_INTERVAL SECOND_UNIT
+#endif /* DEBUG */
+
 #define USE_GENERIC_MAIN
 #undef REMOVE_LEADING_ZERO_FROM_TIME  /* 12 hour display will not have a leading '0' or ' ' if this is defined */
 #undef FONT_NAME

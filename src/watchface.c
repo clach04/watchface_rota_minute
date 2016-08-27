@@ -17,7 +17,10 @@ extern const PebbleProcessInfo __pbl_app_info;  // ONLY for get_major_app_versio
 #endif /* PBL_BW */
 
 Window    *main_window=NULL;
+#ifndef NO_TEXT_TIME_LAYER
 TextLayer *time_layer=NULL;
+#endif /* NO_TEXT_TIME_LAYER */
+
 TextLayer *date_layer=NULL;
 #ifndef DRAW_BATTERY
 TextLayer *battery_layer=NULL;
@@ -360,6 +363,7 @@ void cleanup_battery()
 #endif /* DRAW_BATTERY */
 }
 
+#ifndef NO_TEXT_TIME_LAYER
 void setup_text_time(Window *window)
 {
     // Create time TextLayer
@@ -382,6 +386,7 @@ void cleanup_text_time()
     /* Destroy TextLayers */
     text_layer_destroy(time_layer);
 }
+#endif /* NO_TEXT_TIME_LAYER */
 
 void update_date(struct tm *tick_time) {
     static char buffer[] = MAX_DATE_STR;  /* TODO use same buffer, one for both date and time? */
@@ -510,6 +515,8 @@ void cleanup_bt_image()
 }
 #endif /* BT_DISCONNECT_IMAGE_GRECT */
 
+
+#ifndef NO_TEXT_TIME_LAYER
 void update_time() {
     // Get a tm structure
     time_t    temp = time(NULL);
@@ -580,6 +587,7 @@ void update_time() {
     psleep(DEBUG_TIME_PAUSE);
 #endif /* DEBUG_TIME_PAUSE */
 }
+#endif /* NO_TEXT_TIME_LAYER */
 
 void main_window_load(Window *window) {
     window_set_background_color(window, background_color);
@@ -621,8 +629,11 @@ void main_window_load(Window *window) {
     setup_health(window);
 #endif /* USE_HEALTH */
 
+// FIXME rethink this
+#ifndef NO_TEXT_TIME_LAYER
     /* Make sure the time is displayed from the start */
     update_time();
+#endif /* NO_TEXT_TIME_LAYER */
 
 #ifndef NO_BATTERY
     /* Ensure battery status is displayed from the start */
@@ -719,7 +730,10 @@ void in_recv_handler(DictionaryIterator *iterator, void *context)
         persist_write_int(MESSAGE_KEY_TIME_COLOR, config_time_color);
         wrote_config = true;
         time_color = GColorFromHEX(config_time_color);
+// FIXME need a better solution
+#ifndef NO_TEXT_TIME_LAYER
         text_layer_set_text_color(time_layer, time_color);
+#endif /* NO_TEXT_TIME_LAYER */
 
         if (date_layer) /* or #ifndef NO_DATE */
         {
