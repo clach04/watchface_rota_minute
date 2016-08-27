@@ -7,35 +7,6 @@ GColor       min_color;
 static Window *s_main_window;
 static Layer  *time_layer=NULL;
 
-static void hour_display_update_proc(Layer *layer, GContext* ctx);
-static void minute_display_update_proc(Layer *layer, GContext* ctx)
-{
-    time_t    now = time(NULL);
-    struct tm *t = localtime(&now);
-
-#ifdef DEBUG
-    unsigned int angle = t->tm_sec * 6; // Seconds for debug reasons
-#else
-    unsigned int angle = t->tm_min * 6;
-#endif
-    GRect        bounds = layer_get_bounds(layer);
-
-    hour_display_update_proc(layer, ctx);
-
-    // https://developer.pebble.com/docs/c/Graphics/Graphics_Context/
-    //graphics_context_set_antialiased(ctx, true);
-    //graphics_context_set_antialiased(ctx, false);
-    graphics_context_set_stroke_color(ctx, min_color);
-    graphics_context_set_fill_color(ctx, min_color);
-    graphics_fill_radial(
-        ctx,
-        bounds,
-        GOvalScaleModeFitCircle,
-        7, /* inset, stroke width */
-        DEG_TO_TRIGANGLE(0), /* angle_start */
-        (TRIG_MAX_ANGLE / 360) * angle /* angle_end */
-        );
-}
 
 static void hour_display_update_proc(Layer *layer, GContext* ctx)
 {
@@ -91,6 +62,35 @@ static void hour_display_update_proc(Layer *layer, GContext* ctx)
        https://developer.pebble.com/docs/c/Graphics/Drawing_Primitives/#graphics_draw_bitmap_in_rect
        and  graphics_context_set_compositing_mode()
      */
+}
+
+static void minute_display_update_proc(Layer *layer, GContext* ctx)
+{
+    time_t    now = time(NULL);
+    struct tm *t = localtime(&now);
+
+#ifdef DEBUG
+    unsigned int angle = t->tm_sec * 6; // Seconds for debug reasons
+#else
+    unsigned int angle = t->tm_min * 6;
+#endif
+    GRect        bounds = layer_get_bounds(layer);
+
+    hour_display_update_proc(layer, ctx);
+
+    // https://developer.pebble.com/docs/c/Graphics/Graphics_Context/
+    //graphics_context_set_antialiased(ctx, true);
+    //graphics_context_set_antialiased(ctx, false);
+    graphics_context_set_stroke_color(ctx, min_color);
+    graphics_context_set_fill_color(ctx, min_color);
+    graphics_fill_radial(
+        ctx,
+        bounds,
+        GOvalScaleModeFitCircle,
+        7, /* inset, stroke width */
+        DEG_TO_TRIGANGLE(0), /* angle_start */
+        (TRIG_MAX_ANGLE / 360) * angle /* angle_end */
+        );
 }
 
 static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
