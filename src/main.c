@@ -8,6 +8,7 @@ static Window *s_main_window;
 static Layer  *time_layer=NULL;
 GFont  time_font;
 
+#define FONT_SYSTEM_NAME FONT_KEY_ROBOTO_BOLD_SUBSET_49
 
 static void hour_display_update_proc(Layer *layer, GContext* ctx)
 {
@@ -107,7 +108,7 @@ static void main_window_load(Window *window)
     hour_color=GColorBlack;
     min_color=GColorBlue;
 
-    time_font = fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49);
+    time_font = fonts_get_system_font(FONT_SYSTEM_NAME);
 
     window_set_background_color(s_main_window, background_color);
 
