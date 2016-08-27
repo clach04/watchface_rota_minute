@@ -6,7 +6,7 @@ GColor       min_color;
 
 static Window *s_main_window;
 static Layer  *time_layer=NULL;
-GFont  font;
+GFont  time_font;
 
 
 static void hour_display_update_proc(Layer *layer, GContext* ctx)
@@ -40,7 +40,7 @@ static void hour_display_update_proc(Layer *layer, GContext* ctx)
         */
     }
 
-    GSize text_size = graphics_text_layout_get_content_size(hour_str, font, bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter);
+    GSize text_size = graphics_text_layout_get_content_size(hour_str, time_font, bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter);
     #define hour_h text_size.h
     #define hour_w text_size.w
     GRect hour_rect = GRect(center.x - (hour_w / 2), center.y - (hour_h / 2) - 7, hour_w, hour_h);
@@ -51,7 +51,7 @@ static void hour_display_update_proc(Layer *layer, GContext* ctx)
        APP_LOG(APP_LOG_LEVEL_DEBUG, "%d %d  - %d %d", hour_rect.origin.x, hour_rect.origin.y, hour_rect.size.w, hour_rect.size.h);
      */
 
-    graphics_draw_text(ctx, hour_str, font,
+    graphics_draw_text(ctx, hour_str, time_font,
                        hour_rect,
                        //bounds,
                        GTextOverflowModeWordWrap,
@@ -107,7 +107,7 @@ static void main_window_load(Window *window)
     hour_color=GColorBlack;
     min_color=GColorBlue;
 
-    font = fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49);
+    time_font = fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49);
 
     window_set_background_color(s_main_window, background_color);
 
