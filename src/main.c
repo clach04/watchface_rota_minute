@@ -7,8 +7,6 @@ GColor       min_color;
 static Window *s_main_window;
 static Layer  *s_minute_display_layer, *s_hour_display_layer;
 
-static GPath *s_minute_segment_path, *s_hour_segment_path;
-
 static void minute_display_update_proc(Layer *layer, GContext* ctx)
 {
     time_t    now = time(NULL);
@@ -121,9 +119,6 @@ static void main_window_load(Window *window)
 
 static void main_window_unload(Window *window)
 {
-    gpath_destroy(s_minute_segment_path);
-    gpath_destroy(s_hour_segment_path);
-
     layer_destroy(s_minute_display_layer);
     layer_destroy(s_hour_display_layer);
 }
