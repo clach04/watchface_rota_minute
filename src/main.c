@@ -5,7 +5,7 @@ GColor       hour_color;
 GColor       min_color;
 
 static Window *s_main_window;
-static Layer  *s_minute_display_layer=NULL;
+static Layer  *time_layer=NULL;
 
 static void hour_display_update_proc(Layer *layer, GContext* ctx);
 static void minute_display_update_proc(Layer *layer, GContext* ctx)
@@ -95,7 +95,7 @@ static void hour_display_update_proc(Layer *layer, GContext* ctx)
 
 static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
 {
-    layer_mark_dirty(s_minute_display_layer);
+    layer_mark_dirty(time_layer);
 }
 
 static void main_window_load(Window *window)
@@ -109,14 +109,14 @@ static void main_window_load(Window *window)
 
     window_set_background_color(s_main_window, background_color);
 
-    s_minute_display_layer = layer_create(bounds);
-    layer_set_update_proc(s_minute_display_layer, minute_display_update_proc);
-    layer_add_child(window_layer, s_minute_display_layer);
+    time_layer = layer_create(bounds);
+    layer_set_update_proc(time_layer, minute_display_update_proc);
+    layer_add_child(window_layer, time_layer);
 }
 
 static void main_window_unload(Window *window)
 {
-    layer_destroy(s_minute_display_layer);
+    layer_destroy(time_layer);
 }
 
 static void init()
