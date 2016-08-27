@@ -6,6 +6,7 @@ GColor       min_color;
 
 static Window *s_main_window;
 static Layer  *time_layer=NULL;
+GFont  font;
 
 
 static void hour_display_update_proc(Layer *layer, GContext* ctx)
@@ -16,7 +17,6 @@ static void hour_display_update_proc(Layer *layer, GContext* ctx)
 
     GRect  bounds = layer_get_bounds(layer);
     GPoint center = grect_center_point(&bounds);
-    GFont  font=fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49);
 
     graphics_context_set_text_color(ctx, hour_color);
     if (clock_is_24h_style() == true)
@@ -106,6 +106,8 @@ static void main_window_load(Window *window)
     background_color=GColorWhite;
     hour_color=GColorBlack;
     min_color=GColorBlue;
+
+    font = fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49);
 
     window_set_background_color(s_main_window, background_color);
 
