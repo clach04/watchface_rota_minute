@@ -5,8 +5,9 @@ GColor       hour_color;
 GColor       min_color;
 
 static Window *s_main_window;
-static Layer  *s_minute_display_layer, *s_hour_display_layer;
+static Layer  *s_minute_display_layer=NULL;
 
+static void hour_display_update_proc(Layer *layer, GContext* ctx);
 static void minute_display_update_proc(Layer *layer, GContext* ctx)
 {
     time_t    now = time(NULL);
@@ -19,6 +20,7 @@ static void minute_display_update_proc(Layer *layer, GContext* ctx)
 #endif
     GRect        bounds = layer_get_bounds(layer);
 
+    hour_display_update_proc(layer, ctx);
 
     // https://developer.pebble.com/docs/c/Graphics/Graphics_Context/
     //graphics_context_set_antialiased(ctx, true);
@@ -93,7 +95,6 @@ static void hour_display_update_proc(Layer *layer, GContext* ctx)
 
 static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
 {
-    layer_mark_dirty(s_hour_display_layer);
     layer_mark_dirty(s_minute_display_layer);
 }
 
@@ -110,17 +111,12 @@ static void main_window_load(Window *window)
 
     s_minute_display_layer = layer_create(bounds);
     layer_set_update_proc(s_minute_display_layer, minute_display_update_proc);
-
-    s_hour_display_layer = layer_create(bounds);
-    layer_set_update_proc(s_hour_display_layer, hour_display_update_proc);
-    layer_add_child(window_layer, s_hour_display_layer);
     layer_add_child(window_layer, s_minute_display_layer);
 }
 
 static void main_window_unload(Window *window)
 {
     layer_destroy(s_minute_display_layer);
-    layer_destroy(s_hour_display_layer);
 }
 
 static void init()
