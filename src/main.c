@@ -63,6 +63,13 @@ void hour_display_update_proc(Layer *layer, GContext* ctx)
        https://developer.pebble.com/docs/c/Graphics/Drawing_Primitives/#graphics_draw_bitmap_in_rect
        and  graphics_context_set_compositing_mode()
      */
+#ifndef NO_DATE
+    /* Update the date only when the day changes */
+    if (last_day != tick_time->tm_mday)
+    {
+        update_date(tick_time);
+    }
+#endif /* NO_DATE */
 }
 
 void minute_display_update_proc(Layer *layer, GContext* ctx)
