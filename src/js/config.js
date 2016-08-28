@@ -19,13 +19,13 @@ module.exports = [
                 "type": "color",
                 "label": "Background",
                 "messageKey": "BACKGROUND_COLOR",
-                "defaultValue": "000000"
+                "defaultValue": "FFFFFF"
             },
             {
                 "type": "color",
                 "label": "Foreground",
                 "messageKey": "TIME_COLOR",
-                "defaultValue": "FFFFFF"
+                "defaultValue": "000000"
             }
         ]
     },
