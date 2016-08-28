@@ -121,9 +121,10 @@ void setup_time(Window *window)
     Layer *window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_bounds(window_layer);
 
-    background_color = GColorWhite;
-    hour_color = GColorBlack;
-    min_color = GColorBlue;
+    // FIXME pickup from config
+    background_color = COLOR_FALLBACK(DEFAULT_BACKGROUND_COLOR, GColorWhite);
+    hour_color = COLOR_FALLBACK(DEFAULT_TIME_COLOR, GColorBlack);
+    min_color = COLOR_FALLBACK(DEFAULT_TIME_MIN_COLOR, GColorBlack);
 
     //time_font = fonts_get_system_font(FONT_SYSTEM_NAME);
 
