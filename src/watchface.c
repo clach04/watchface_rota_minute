@@ -727,7 +727,6 @@ void in_recv_handler(DictionaryIterator *iterator, void *context)
         persist_write_int(MESSAGE_KEY_TIME_COLOR, config_time_color);
         wrote_config = true;
         time_color = GColorFromHEX(config_time_color);
-// FIXME need a better solution
 #ifndef NO_TEXT_TIME_LAYER
         text_layer_set_text_color(time_layer, time_color);
 #endif /* NO_TEXT_TIME_LAYER */
