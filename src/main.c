@@ -39,15 +39,7 @@ void hour_display_update_proc(Layer *layer, GContext* ctx)
         // 12 hour format
         unsigned short display_hour = tick_time->tm_hour % 12;
         display_hour = display_hour ? display_hour : 12;
-        //sprintf(hour_str, "%d", display_hour);
         snprintf(hour_str, sizeof(hour_str), "%d", display_hour);
-        /*
-        strftime(hour_str, sizeof(hour_str), "%I", tick_time);
-        if (hour_str[0] == '0' || hour_str[0] == ' ')
-        {
-            memmove(&hour_str[0], &hour_str[1], sizeof(hour_str) - 1); // remove leading character (really byte)
-        }
-        */
     }
 
     GSize text_size = graphics_text_layout_get_content_size(hour_str, time_font, bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter);
@@ -63,7 +55,6 @@ void hour_display_update_proc(Layer *layer, GContext* ctx)
 
     graphics_draw_text(ctx, hour_str, time_font,
                        hour_rect,
-                       //bounds,
                        GTextOverflowModeWordWrap,
                        GTextAlignmentCenter,
                        NULL);
