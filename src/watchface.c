@@ -629,11 +629,8 @@ void main_window_load(Window *window) {
     setup_health(window);
 #endif /* USE_HEALTH */
 
-// FIXME rethink this
-#ifndef NO_TEXT_TIME_LAYER
     /* Make sure the time is displayed from the start */
     update_time();
-#endif /* NO_TEXT_TIME_LAYER */
 
 #ifndef NO_BATTERY
     /* Ensure battery status is displayed from the start */
