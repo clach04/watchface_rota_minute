@@ -1,7 +1,6 @@
 #pragma once
 
 #include "watch_config.h"
-extern void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed);
 
 #ifndef USE_MAX_MESSAGE_SIZE
     /*
@@ -162,10 +161,10 @@ extern void cleanup_date();
 extern void update_time();
 extern void main_window_load(Window *window);
 extern void main_window_unload(Window *window);
-extern void tick_handler(struct tm *tick_time, TimeUnits units_changed);
 extern void in_recv_handler(DictionaryIterator *iterator, void *context);
 extern void init();
 extern void deinit();
+extern void TICK_HANDLER(struct tm *tick_time, TimeUnits units_changed);
 
 extern void CLEANUP_TIME();
 extern void SETUP_TIME(Window *window);
