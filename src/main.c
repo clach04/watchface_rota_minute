@@ -10,9 +10,12 @@
 
 #include "watchface.h"
 
-// FIXME set default
 #define hour_color time_color
-static GColor       min_color;
+#ifdef PBL_BW
+    #define min_color hour_color
+#else
+    static GColor       min_color;
+#endif /* PBL_BW */
 static Layer  *time_layer=NULL;
 
 // FIXME date setup/update
@@ -124,7 +127,9 @@ void setup_time(Window *window)
     // FIXME pickup from config
     background_color = COLOR_FALLBACK(DEFAULT_BACKGROUND_COLOR, GColorWhite);
     hour_color = COLOR_FALLBACK(DEFAULT_TIME_COLOR, GColorBlack);
+#ifndef PBL_BW
     min_color = COLOR_FALLBACK(DEFAULT_TIME_MIN_COLOR, GColorBlack);
+#endif /* PBL_BW */
 
     //time_font = fonts_get_system_font(FONT_SYSTEM_NAME);
 
