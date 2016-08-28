@@ -8,7 +8,7 @@
 #define DEFAULT_TIME_MIN_COLOR GColorBlue
 #define DEFAULT_BACKGROUND_COLOR GColorWhite
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define TICK_HANDLER_INTERVAL SECOND_UNIT
 #endif /* DEBUG */
