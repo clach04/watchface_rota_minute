@@ -11,7 +11,7 @@
 #include "watchface.h"
 
 // FIXME set default
-static GColor       hour_color;
+#define hour_color time_color
 static GColor       min_color;
 static Layer  *time_layer=NULL;
 
