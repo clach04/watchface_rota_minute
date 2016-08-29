@@ -18,7 +18,6 @@
 #endif /* PBL_BW */
 static Layer  *time_layer=NULL;
 
-// FIXME date setup/update
 // FIXME location of date. either lower? or top/bottom right with newlines
 // FIXME test BT image. Bluetooth text works.
 
