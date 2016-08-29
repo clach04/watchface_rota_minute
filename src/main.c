@@ -30,6 +30,10 @@ void hour_display_update_proc(Layer *layer, GContext* ctx)
     GRect  bounds = layer_get_bounds(layer);
     GPoint center = grect_center_point(&bounds);
 
+#ifdef DEBUG
+       APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() entry", __func__);
+#endif /* DEBUG */
+
     graphics_context_set_text_color(ctx, hour_color);
     if (clock_is_24h_style() == true)
     {
@@ -48,12 +52,11 @@ void hour_display_update_proc(Layer *layer, GContext* ctx)
     #define hour_h text_size.h
     #define hour_w text_size.w
     GRect hour_rect = GRect(center.x - (hour_w / 2), center.y - (hour_h / 2) - 7, hour_w, hour_h);
-    /*
+#ifdef DEBUG
        APP_LOG(APP_LOG_LEVEL_DEBUG, "text_size %d %d", text_size.w, text_size.h);
-       APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() entry", __func__);
        APP_LOG(APP_LOG_LEVEL_DEBUG, "center.x: %d, center.y %d", center.x, center.y);
        APP_LOG(APP_LOG_LEVEL_DEBUG, "%d %d  - %d %d", hour_rect.origin.x, hour_rect.origin.y, hour_rect.size.w, hour_rect.size.h);
-     */
+#endif /* DEBUG */
 
     graphics_draw_text(ctx, hour_str, time_font,
                        hour_rect,
