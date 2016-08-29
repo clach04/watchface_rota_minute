@@ -2,7 +2,6 @@
 
 #define SETUP_TIME setup_time
 #define CLEANUP_TIME cleanup_time
-#define TICK_HANDLER handle_minute_tick
 #define NO_TEXT_TIME_LAYER
 #define DEFAULT_TIME_COLOR GColorBlack
 #define DEFAULT_TIME_MIN_COLOR GColorBlue

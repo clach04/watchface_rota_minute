@@ -109,11 +109,6 @@ void update_time()
     layer_mark_dirty(time_layer);
 }
 
- void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
-{
-    update_time();
-}
-
 void cleanup_time()
 {
     layer_destroy(time_layer);
