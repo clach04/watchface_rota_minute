@@ -6,6 +6,7 @@
 #define DEFAULT_TIME_COLOR GColorBlack
 #define DEFAULT_TIME_MIN_COLOR GColorBlue
 #define DEFAULT_BACKGROUND_COLOR GColorWhite
+// CLOCK_POS is not used
 
 //#define DEBUG
 #ifdef DEBUG
@@ -46,7 +47,7 @@
     #define CLOCK_POS GRect(0, 52, 144, 168) /* probably taller than really needed */
     #define HEALTH_POS GRect(0, 40, 144, 168)
     #define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
-    #define DATE_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
+    #define DATE_POS GRect(0, 148, 125, 168) /* bottom of "g" in "Aug" starting to be cut off . Top RHS may be be better (see Capinion/stormtrooper/spawn */
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(5, 150, 144, 168)
     #else
