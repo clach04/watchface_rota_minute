@@ -7,6 +7,7 @@
 #define DEFAULT_TIME_MIN_COLOR GColorBlue
 #define DEFAULT_BACKGROUND_COLOR GColorWhite
 // CLOCK_POS is not used
+#undef PBL_HEALTH  // workaround non-Diorite builds bug in SDk4?
 
 //#define DEBUG
 #ifdef DEBUG
