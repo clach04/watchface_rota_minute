@@ -27,7 +27,7 @@ void hour_display_update_proc(Layer *layer, GContext* ctx)
     struct tm *tick_time=localtime(&now);
     char      hour_str[3]="12";
 
-    GRect  bounds = layer_get_bounds(layer);
+    GRect  bounds = layer_get_unobstructed_bounds(layer);
     GPoint center = grect_center_point(&bounds);
 
 #ifdef DEBUG
@@ -87,7 +87,7 @@ void minute_display_update_proc(Layer *layer, GContext* ctx)
 #else
     unsigned int angle = t->tm_min * 6;
 #endif
-    GRect        bounds = layer_get_bounds(layer);
+    GRect        bounds = layer_get_unobstructed_bounds(layer);
 
     hour_display_update_proc(layer, ctx);
 
