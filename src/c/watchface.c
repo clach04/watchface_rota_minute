@@ -209,15 +209,18 @@ static void health_handler(HealthEventType event, void *context)
         case HealthEventSleepUpdate:
             APP_LOG(APP_LOG_LEVEL_INFO, "New HealthService HealthEventSleepUpdate event");
             break;
-       PBL_PLATFORM_DIORITE
-//#ifdef PBL_PLATFORM_DIORITE  // FIXME replace with new equiv of PBL_SDK_4. Note, will not be needed once SDK4 is out of beta
+#ifdef PBL_PLATFORM_DIORITE  // FIXME replace with new equiv of PBL_SDK_4. Note, will not be needed once SDK4 is out of beta
         case HealthEventMetricAlert:
             APP_LOG(APP_LOG_LEVEL_INFO, "New HealthService HealthEventMetricAlert event");
             break;
         case HealthEventHeartRateUpdate:
             APP_LOG(APP_LOG_LEVEL_INFO, "New HealthService HealthEventHeartRateUpdate event");
             break;
-//#endif /* PBL_PLATFORM_DIORITE  */
+#endif /* PBL_PLATFORM_DIORITE  */
+        // Default is not a good idea, but get switch warnings (about heart events) without it on Basalt/Chalk SDK4 builds
+        default:
+            APP_LOG(APP_LOG_LEVEL_INFO, "New HealthService UNHANDLED event");
+            break;
     }
 }
 
