@@ -4,12 +4,12 @@
     "keywords": [
         "pebble-app"
     ],
-    "name": "rota-minute",
+    "name": "rota-minute-basic",
     "pebble": {
         "capabilities": [
             ""
         ],
-        "displayName": "Rota Minute",
+        "displayName": "Rota Minute Basic",
         "enableMultiJS": true,
         "messageKeys": [],
         "projectType": "native",
