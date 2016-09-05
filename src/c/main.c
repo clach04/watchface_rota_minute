@@ -147,11 +147,6 @@ void setup_time(Window *window)
     Layer *window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_bounds(window_layer);
 
-    // FIXME pickup from config
-    /*
-    background_color = COLOR_FALLBACK(DEFAULT_BACKGROUND_COLOR, GColorWhite);
-    hour_color = COLOR_FALLBACK(DEFAULT_TIME_COLOR, GColorBlack);
-    */
     if (persist_exists(MESSAGE_KEY_MINUTES_COLOR))
     {
         config_min_color = persist_read_int(MESSAGE_KEY_MINUTES_COLOR);
