@@ -816,7 +816,6 @@ void init()
         wipe_config();
     }
 
-#ifdef PBL_COLOR
     /* TODO refactor */
     if (persist_exists(MESSAGE_KEY_TIME_COLOR))
     {
@@ -830,7 +829,6 @@ void init()
         APP_LOG(APP_LOG_LEVEL_INFO, "Read background color: %x", config_background_color);
         background_color = GColorFromHEX(config_background_color);
     }
-#endif /* PBL_COLOR */
 
     if (persist_exists(MESSAGE_KEY_VIBRATE_ON_DISCONNECT))
     {

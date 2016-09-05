@@ -148,11 +148,20 @@ void setup_time(Window *window)
     GRect bounds = layer_get_bounds(window_layer);
 
     // FIXME pickup from config
+    /*
     background_color = COLOR_FALLBACK(DEFAULT_BACKGROUND_COLOR, GColorWhite);
     hour_color = COLOR_FALLBACK(DEFAULT_TIME_COLOR, GColorBlack);
-#ifndef PBL_BW
-    min_color = COLOR_FALLBACK(DEFAULT_TIME_MIN_COLOR, GColorBlack);
-#endif /* PBL_BW */
+    */
+    if (persist_exists(MESSAGE_KEY_MINUTES_COLOR))
+    {
+        config_min_color = persist_read_int(MESSAGE_KEY_MINUTES_COLOR);
+        APP_LOG(APP_LOG_LEVEL_INFO, "Read time color: %x", config_min_color);
+        min_color = GColorFromHEX(config_min_color);
+    }
+    else
+    {
+        min_color = COLOR_FALLBACK(DEFAULT_TIME_MIN_COLOR, GColorBlack);
+    }
 
     //time_font = fonts_get_system_font(FONT_SYSTEM_NAME);
 
