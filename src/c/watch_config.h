@@ -22,10 +22,12 @@
 #undef FONT_SYSTEM_NAME  /* the default font system will be used */
 #undef DEBUG_TIME
 
+/*
 #if defined(PBL_HEALTH)
     #define USE_HEALTH
-    //#define UPDATE_HEALTH_ON_ACTIVITY  /* If not set, only updates step count display once per minute */
-#endif /* PBL_HEALTH */
+    //#define UPDATE_HEALTH_ON_ACTIVITY  // If not set, only updates step count display once per minute
+#endif // PBL_HEALTH
+*/
 
 #define DRAW_BATTERY
 #define DRAW_SMALL_BATTERY
