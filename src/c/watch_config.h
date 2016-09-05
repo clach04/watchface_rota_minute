@@ -7,6 +7,8 @@
 #define DEFAULT_TIME_MIN_COLOR GColorBlue
 #define DEFAULT_BACKGROUND_COLOR GColorWhite
 #define CUSTOM_IN_RECV_HANDLER custom_in_recv_handler
+#define BLUETOOTH_DISCONNECTED_STR "No BT"
+// Consider using BT image rather than text
 // CLOCK_POS is not used
 
 //#define DEBUG
@@ -47,7 +49,8 @@
 #else /* PBL_RECT 144x168*/
     #define CLOCK_POS GRect(0, 52, 144, 168) /* probably taller than really needed */
     #define HEALTH_POS GRect(0, 40, 144, 168)
-    #define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
+    //#define BT_POS GRect(0, 100, 144, 168) /* probably taller than really needed */
+    #define BT_POS GRect(0, 20, 144, 168) /* probably taller than really needed */
     //#define DATE_POS GRect(0, 148, 125, 168) /* bottom of "g" in "Aug" starting to be cut off . Top RHS may be be better (see Capinion/stormtrooper/spawn */
 //#define DATE_FMT_STR "%a\n%b\n%d"
 //#define MAX_DATE_STR "Thu\n00\nAug" /* if custom version of DATE_FMT_STR is set, MAX_DATE_STR  needs to be updated too */
