@@ -6,6 +6,7 @@
 #define DEFAULT_TIME_COLOR GColorBlack
 #define DEFAULT_TIME_MIN_COLOR GColorBlue
 #define DEFAULT_BACKGROUND_COLOR GColorWhite
+#define CUSTOM_IN_RECV_HANDLER custom_in_recv_handler
 // CLOCK_POS is not used
 
 //#define DEBUG

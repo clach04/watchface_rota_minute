@@ -26,6 +26,12 @@ module.exports = [
                 "label": "Foreground",
                 "messageKey": "TIME_COLOR",
                 "defaultValue": "000000"
+            },
+            {
+                "type": "color",
+                "label": "Minutes",
+                "messageKey": "MINUTES_COLOR",
+                "defaultValue": "0000FF"
             }
         ]
     },

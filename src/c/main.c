@@ -16,10 +16,36 @@
 #else
     static GColor       min_color;
 #endif /* PBL_BW */
+int          config_min_color; // FIXME read on startup.
 static Layer  *time_layer=NULL;
 
 // FIXME location of date. either lower? or top/bottom right with newlines
 // FIXME test BT image. Bluetooth text works.
+
+bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
+{
+    Tuple *t=NULL;
+    bool wrote_config=false;
+
+    /* NOTE if new entries are added, increase MAX_MESSAGE_SIZE_OUT macro */
+
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "custom_in_recv_handler() called");
+    t = dict_find(iterator, MESSAGE_KEY_MINUTES_COLOR);
+    if (t)
+    {
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_MINUTES_COLOR");
+        config_min_color = (int)t->value->int32;
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting minutes color: 0x%06x", config_min_color);
+        persist_write_int(MESSAGE_KEY_MINUTES_COLOR, config_min_color);
+        wrote_config = true;
+        min_color = GColorFromHEX(config_min_color);
+        // force paint?
+        // layer_mark_dirty(time_layer);
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "MINUTES COLOR DONE");
+    }
+
+    return wrote_config;
+}
 
 void hour_display_update_proc(Layer *layer, GContext* ctx)
 {
