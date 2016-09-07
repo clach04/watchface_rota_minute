@@ -70,9 +70,9 @@ void digits_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, char 
     graphics_context_set_text_color(ctx, hour_color);
 
     GSize text_size = graphics_text_layout_get_content_size(digits_str, time_font, bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter);
-    #define hour_h text_size.h  // FIXME rename
-    #define hour_w text_size.w
-    GRect hour_rect = GRect(center.x - (hour_w / 2), center.y - (hour_h / 2) - 7, hour_w, hour_h);
+    #define digits_height text_size.h
+    #define digits_width text_size.w
+    GRect hour_rect = GRect(center.x - (digits_width / 2), center.y - (digits_height / 2) - 7, digits_width, digits_height);
 #ifdef DEBUG
        APP_LOG(APP_LOG_LEVEL_DEBUG, "text_size %d %d", text_size.w, text_size.h);
        APP_LOG(APP_LOG_LEVEL_DEBUG, "center.x: %d, center.y %d", center.x, center.y);
