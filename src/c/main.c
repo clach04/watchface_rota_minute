@@ -47,13 +47,9 @@ bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
     return wrote_config;
 }
 
-void hour_display_update_proc(Layer *layer, GContext* ctx)
+void hour_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect bounds)
 {
-    time_t    now=time(NULL);
-    struct tm *tick_time=localtime(&now);
     char      hour_str[3]="12";
-
-    GRect  bounds = layer_get_unobstructed_bounds(layer);
     GPoint center = grect_center_point(&bounds);
 
 #ifdef DEBUG
@@ -64,12 +60,12 @@ void hour_display_update_proc(Layer *layer, GContext* ctx)
     if (clock_is_24h_style() == true)
     {
         // 24h hour format
-        strftime(hour_str, sizeof(hour_str), "%H", tick_time);
+        strftime(hour_str, sizeof(hour_str), "%H", t);
     }
     else
     {
         // 12 hour format
-        unsigned short display_hour = tick_time->tm_hour % 12;
+        unsigned short display_hour = t->tm_hour % 12;
         display_hour = display_hour ? display_hour : 12;
         snprintf(hour_str, sizeof(hour_str), "%d", display_hour);
     }
@@ -96,27 +92,15 @@ void hour_display_update_proc(Layer *layer, GContext* ctx)
      */
 #ifndef NO_DATE
     /* Update the date only when the day changes */
-    if (last_day != tick_time->tm_mday)
+    if (last_day != t->tm_mday)
     {
-        update_date(tick_time);
+        update_date(t);
     }
 #endif /* NO_DATE */
 }
 
-void minute_display_update_proc(Layer *layer, GContext* ctx)
+void minute_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect bounds, int angle)
 {
-    time_t    now = time(NULL);
-    struct tm *t = localtime(&now);
-
-#ifdef DEBUG
-    unsigned int angle = t->tm_sec * 6; // Seconds for debug reasons
-#else
-    unsigned int angle = t->tm_min * 6;
-#endif
-    GRect        bounds = layer_get_unobstructed_bounds(layer);
-
-    hour_display_update_proc(layer, ctx);
-
     // https://developer.pebble.com/docs/c/Graphics/Graphics_Context/
     //graphics_context_set_antialiased(ctx, true);
     //graphics_context_set_antialiased(ctx, false);
@@ -130,6 +114,22 @@ void minute_display_update_proc(Layer *layer, GContext* ctx)
         DEG_TO_TRIGANGLE(0), /* angle_start */
         (TRIG_MAX_ANGLE / 360) * angle /* angle_end */
         );
+}
+
+void update_time_update_proc(Layer *layer, GContext* ctx)
+{
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+
+#ifdef DEBUG
+    unsigned int angle = t->tm_sec * 6; // Seconds for debug reasons
+#else
+    unsigned int angle = t->tm_min * 6;
+#endif
+    GRect        bounds = layer_get_unobstructed_bounds(layer);
+
+    hour_display_update_proc(layer, ctx, t, bounds);
+    minute_display_update_proc(layer, ctx, t, bounds, angle);
 }
 
 void update_time()
@@ -163,6 +163,6 @@ void setup_time(Window *window)
     window_set_background_color(window, background_color);
 
     time_layer = layer_create(bounds);
-    layer_set_update_proc(time_layer, minute_display_update_proc);
+    layer_set_update_proc(time_layer, update_time_update_proc);
     layer_add_child(window_layer, time_layer);
 }
