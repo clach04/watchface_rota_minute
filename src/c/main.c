@@ -20,7 +20,6 @@ int          config_min_color;
 static Layer  *time_layer=NULL;
 bool draw_hour_as_text=true;
 
-// FIXME location of date. either lower? or top/bottom right with newlines
 // FIXME test BT image. Bluetooth text works.
 
 bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
