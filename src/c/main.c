@@ -16,7 +16,7 @@
 #else
     static GColor       min_color;
 #endif /* PBL_BW */
-int          config_min_color; // FIXME read on startup.
+int          config_min_color;
 static Layer  *time_layer=NULL;
 bool draw_hour_as_text=true;
 
