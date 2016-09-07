@@ -47,7 +47,7 @@ bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
     return wrote_config;
 }
 
-void hour_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect bounds)
+void digits_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect bounds)
 {
     char      hour_str[3]="12";
     GPoint center = grect_center_point(&bounds);
@@ -99,7 +99,7 @@ void hour_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect b
 #endif /* NO_DATE */
 }
 
-void minute_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect bounds, int angle)
+void draw_arc_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect bounds, int angle)
 {
     // https://developer.pebble.com/docs/c/Graphics/Graphics_Context/
     //graphics_context_set_antialiased(ctx, true);
@@ -128,8 +128,8 @@ void update_time_update_proc(Layer *layer, GContext* ctx)
 #endif
     GRect        bounds = layer_get_unobstructed_bounds(layer);
 
-    hour_display_update_proc(layer, ctx, t, bounds);
-    minute_display_update_proc(layer, ctx, t, bounds, angle);
+    digits_display_update_proc(layer, ctx, t, bounds);
+    draw_arc_display_update_proc(layer, ctx, t, bounds, angle);
 }
 
 void update_time()
