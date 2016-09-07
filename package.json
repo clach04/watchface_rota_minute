@@ -16,7 +16,8 @@
             "VIBRATE_ON_DISCONNECT",
             "BACKGROUND_COLOR",
             "MAJOR_VERSION",
-            "MINUTES_COLOR"
+            "MINUTES_COLOR",
+            "HOUR_AS_TEXT"
         ],
         "projectType": "native",
         "resources": {

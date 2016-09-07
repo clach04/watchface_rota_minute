@@ -18,6 +18,7 @@
 #endif /* PBL_BW */
 int          config_min_color; // FIXME read on startup.
 static Layer  *time_layer=NULL;
+bool draw_hour_as_text=true;
 
 // FIXME location of date. either lower? or top/bottom right with newlines
 // FIXME test BT image. Bluetooth text works.
@@ -43,13 +44,24 @@ bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
         // layer_mark_dirty(time_layer);
         APP_LOG(APP_LOG_LEVEL_DEBUG, "MINUTES COLOR DONE");
     }
+    t = dict_find(iterator, MESSAGE_KEY_HOUR_AS_TEXT);
+    if (t)
+    {
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_HOUR_AS_TEXT");
+        draw_hour_as_text = (bool)t->value->int32;  /* this doesn't feel correct... */
+        APP_LOG(APP_LOG_LEVEL_INFO, "Persisting draw_hour_as_text: %d", (int) draw_hour_as_text);
+        persist_write_bool(MESSAGE_KEY_VIBRATE_ON_DISCONNECT, draw_hour_as_text);
+        wrote_config = true;
+        // force paint?
+        // layer_mark_dirty(time_layer);
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "MINUTES COLOR DONE");
+    }
 
     return wrote_config;
 }
 
-void digits_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect bounds)
+void digits_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, char *digits_str)
 {
-    char      hour_str[3]="12";
     GPoint center = grect_center_point(&bounds);
 
 #ifdef DEBUG
@@ -57,21 +69,9 @@ void digits_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect
 #endif /* DEBUG */
 
     graphics_context_set_text_color(ctx, hour_color);
-    if (clock_is_24h_style() == true)
-    {
-        // 24h hour format
-        strftime(hour_str, sizeof(hour_str), "%H", t);
-    }
-    else
-    {
-        // 12 hour format
-        unsigned short display_hour = t->tm_hour % 12;
-        display_hour = display_hour ? display_hour : 12;
-        snprintf(hour_str, sizeof(hour_str), "%d", display_hour);
-    }
 
-    GSize text_size = graphics_text_layout_get_content_size(hour_str, time_font, bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter);
-    #define hour_h text_size.h
+    GSize text_size = graphics_text_layout_get_content_size(digits_str, time_font, bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter);
+    #define hour_h text_size.h  // FIXME rename
     #define hour_w text_size.w
     GRect hour_rect = GRect(center.x - (hour_w / 2), center.y - (hour_h / 2) - 7, hour_w, hour_h);
 #ifdef DEBUG
@@ -80,7 +80,7 @@ void digits_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect
        APP_LOG(APP_LOG_LEVEL_DEBUG, "%d %d  - %d %d", hour_rect.origin.x, hour_rect.origin.y, hour_rect.size.w, hour_rect.size.h);
 #endif /* DEBUG */
 
-    graphics_draw_text(ctx, hour_str, time_font,
+    graphics_draw_text(ctx, digits_str, time_font,
                        hour_rect,
                        GTextOverflowModeWordWrap,
                        GTextAlignmentCenter,
@@ -90,16 +90,9 @@ void digits_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect
        https://developer.pebble.com/docs/c/Graphics/Drawing_Primitives/#graphics_draw_bitmap_in_rect
        and  graphics_context_set_compositing_mode()
      */
-#ifndef NO_DATE
-    /* Update the date only when the day changes */
-    if (last_day != t->tm_mday)
-    {
-        update_date(t);
-    }
-#endif /* NO_DATE */
 }
 
-void draw_arc_display_update_proc(Layer *layer, GContext* ctx, struct tm *t, GRect bounds, int angle)
+void draw_arc_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, int angle)
 {
     // https://developer.pebble.com/docs/c/Graphics/Graphics_Context/
     //graphics_context_set_antialiased(ctx, true);
@@ -120,16 +113,55 @@ void update_time_update_proc(Layer *layer, GContext* ctx)
 {
     time_t now = time(NULL);
     struct tm *t = localtime(&now);
+    char digits_array[3]="12";
 
-#ifdef DEBUG
-    unsigned int angle = t->tm_sec * 6; // Seconds for debug reasons
-#else
-    unsigned int angle = t->tm_min * 6;
-#endif
+
+    unsigned int angle=0;
     GRect        bounds = layer_get_unobstructed_bounds(layer);
 
-    digits_display_update_proc(layer, ctx, t, bounds);
-    draw_arc_display_update_proc(layer, ctx, t, bounds, angle);
+    //APP_LOG(APP_LOG_LEVEL_DEBUG, "text_size t->tm_hour=%d t->tm_min=%d", t->tm_hour, t->tm_min);
+    //APP_LOG(APP_LOG_LEVEL_DEBUG, "angle before: %d", angle);
+    if (draw_hour_as_text)
+    {
+        if (clock_is_24h_style() == true)
+        {
+            // 24h hour format
+            strftime(digits_array, sizeof(digits_array), "%H", t);
+        }
+        else
+        {
+            // 12 hour format
+            unsigned short display_hour = t->tm_hour % 12;
+            display_hour = display_hour ? display_hour : 12;
+            snprintf(digits_array, sizeof(digits_array), "%d", display_hour);
+        }
+        // Angle of minutes is like a minute hand on a traditional analog watch
+        angle = t->tm_min * 6;  // 360 / 60
+    }
+    else
+    {
+        // determine 12 hour format for hour
+        unsigned short display_hour = t->tm_hour % 12;
+        display_hour = display_hour ? display_hour : 12;
+
+        // Angle of hour is like an hour hand on a traditional analog watch
+        angle = display_hour * 30;  // 360 / 12
+        strftime(digits_array, sizeof(digits_array), "%M", t);
+    }
+#ifdef DEBUG
+    angle = t->tm_sec * 6; // Seconds for debug reasons
+#endif
+    //APP_LOG(APP_LOG_LEVEL_DEBUG, "angle after: %d", angle);
+
+    digits_display_update_proc(layer, ctx, bounds, digits_array);
+#ifndef NO_DATE
+    /* Update the date only when the day changes */
+    if (last_day != t->tm_mday)
+    {
+        update_date(t);
+    }
+#endif /* NO_DATE */
+    draw_arc_display_update_proc(layer, ctx, bounds, angle);
 }
 
 void update_time()
@@ -157,6 +189,13 @@ void setup_time(Window *window)
     {
         min_color = COLOR_FALLBACK(DEFAULT_TIME_MIN_COLOR, GColorBlack);
     }
+
+    if (persist_exists(MESSAGE_KEY_HOUR_AS_TEXT))
+    {
+        draw_hour_as_text = persist_read_bool(MESSAGE_KEY_HOUR_AS_TEXT);
+        APP_LOG(APP_LOG_LEVEL_INFO, "Read draw_hour_as_text: %d", (int) draw_hour_as_text);
+    }
+    // TODO wipe_config() needs to handle MESSAGE_KEY_MINUTES_COLOR and MESSAGE_KEY_HOUR_AS_TEXT
 
     //time_font = fonts_get_system_font(FONT_SYSTEM_NAME);
 

@@ -47,6 +47,12 @@ module.exports = [
                 "label": "Vibrate on Bluetooth disconnect",
                 "messageKey": "VIBRATE_ON_DISCONNECT",
                 "defaultValue": false
+            },
+            {
+                "type": "toggle",
+                "label": "Display hour as text",
+                "messageKey": "HOUR_AS_TEXT",
+                "defaultValue": true
             }
         ]
     },
