@@ -16,8 +16,8 @@
 #else
     static GColor       min_color;
 #endif /* PBL_BW */
-int          config_min_color;
-static Layer  *time_layer=NULL;
+int config_min_color;
+static Layer *time_layer=NULL;
 bool draw_hour_as_text=true;
 
 // FIXME test BT image. Bluetooth text works.
@@ -116,7 +116,7 @@ void update_time_update_proc(Layer *layer, GContext* ctx)
 
 
     unsigned int angle=0;
-    GRect        bounds = layer_get_unobstructed_bounds(layer);
+    GRect bounds = layer_get_unobstructed_bounds(layer);
 
     //APP_LOG(APP_LOG_LEVEL_DEBUG, "text_size t->tm_hour=%d t->tm_min=%d", t->tm_hour, t->tm_min);
     //APP_LOG(APP_LOG_LEVEL_DEBUG, "angle before: %d", angle);
