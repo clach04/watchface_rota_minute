@@ -46,10 +46,10 @@ bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
     t = dict_find(iterator, MESSAGE_KEY_HOUR_AS_TEXT);
     if (t)
     {
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_HOUR_AS_TEXT");
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_HOUR_AS_TEXT");
         draw_hour_as_text = (bool)t->value->int32;  /* this doesn't feel correct... */
         APP_LOG(APP_LOG_LEVEL_INFO, "Persisting draw_hour_as_text: %d", (int) draw_hour_as_text);
-        persist_write_bool(MESSAGE_KEY_VIBRATE_ON_DISCONNECT, draw_hour_as_text);
+        persist_write_bool(MESSAGE_KEY_HOUR_AS_TEXT, draw_hour_as_text);
         wrote_config = true;
         // force paint?
         // layer_mark_dirty(time_layer);
