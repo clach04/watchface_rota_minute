@@ -43,6 +43,9 @@ bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
         // layer_mark_dirty(time_layer);
         APP_LOG(APP_LOG_LEVEL_DEBUG, "MESSAGE_KEY_MINUTES_COLOR DONE");
     }
+
+    // TODO consider wrapping below in a macro (or maybe function) to avoid code duplication
+    // one for bool, another for int
     t = dict_find(iterator, MESSAGE_KEY_HOUR_AS_TEXT);
     if (t)
     {
