@@ -10,9 +10,9 @@
 
 #include "watchface.h"
 
-#define hour_color time_color
+#define digits_color time_color
 #ifdef PBL_BW
-    #define arc_color hour_color
+    #define arc_color digits_color
 #else
     static GColor       arc_color;
 #endif /* PBL_BW */
@@ -67,7 +67,7 @@ void digits_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, char 
        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() entry", __func__);
 #endif /* DEBUG */
 
-    graphics_context_set_text_color(ctx, hour_color);
+    graphics_context_set_text_color(ctx, digits_color);
 
     GSize text_size = graphics_text_layout_get_content_size(digits_str, time_font, bounds, GTextOverflowModeWordWrap, GTextAlignmentCenter);
     #define digits_height text_size.h
