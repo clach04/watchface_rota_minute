@@ -4,7 +4,7 @@
 #define CLEANUP_TIME cleanup_time
 #define NO_TEXT_TIME_LAYER
 #define DEFAULT_TIME_COLOR GColorBlack
-#define DEFAULT_TIME_MIN_COLOR GColorBlue
+#define DEFAULT_TIME_ARC_COLOR GColorBlue
 #define DEFAULT_BACKGROUND_COLOR GColorWhite
 #define CUSTOM_IN_RECV_HANDLER custom_in_recv_handler
 #define BLUETOOTH_DISCONNECTED_STR "No BT"

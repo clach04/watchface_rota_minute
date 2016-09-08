@@ -186,7 +186,7 @@ void setup_time(Window *window)
     }
     else
     {
-        arc_color = COLOR_FALLBACK(DEFAULT_TIME_MIN_COLOR, GColorBlack);
+        arc_color = COLOR_FALLBACK(DEFAULT_TIME_ARC_COLOR, GColorBlack);
     }
 
     if (persist_exists(MESSAGE_KEY_HOUR_AS_TEXT))
