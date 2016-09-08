@@ -12,11 +12,11 @@
 
 #define hour_color time_color
 #ifdef PBL_BW
-    #define min_color hour_color
+    #define arc_color hour_color
 #else
-    static GColor       min_color;
+    static GColor       arc_color;
 #endif /* PBL_BW */
-int config_min_color;
+int config_arc_color;
 static Layer *time_layer=NULL;
 bool draw_hour_as_text=true;
 
@@ -34,14 +34,14 @@ bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
     if (t)
     {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_MINUTES_COLOR");
-        config_min_color = (int)t->value->int32;
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting minutes color: 0x%06x", config_min_color);
-        persist_write_int(MESSAGE_KEY_MINUTES_COLOR, config_min_color);
+        config_arc_color = (int)t->value->int32;
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting arc color: 0x%06x", config_arc_color);
+        persist_write_int(MESSAGE_KEY_MINUTES_COLOR, config_arc_color);
         wrote_config = true;
-        min_color = GColorFromHEX(config_min_color);
+        arc_color = GColorFromHEX(config_arc_color);
         // force paint?
         // layer_mark_dirty(time_layer);
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "MINUTES COLOR DONE");
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "MESSAGE_KEY_MINUTES_COLOR DONE");
     }
     t = dict_find(iterator, MESSAGE_KEY_HOUR_AS_TEXT);
     if (t)
@@ -96,8 +96,8 @@ void draw_arc_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, int
     // https://developer.pebble.com/docs/c/Graphics/Graphics_Context/
     //graphics_context_set_antialiased(ctx, true);
     //graphics_context_set_antialiased(ctx, false);
-    graphics_context_set_stroke_color(ctx, min_color);
-    graphics_context_set_fill_color(ctx, min_color);
+    graphics_context_set_stroke_color(ctx, arc_color);
+    graphics_context_set_fill_color(ctx, arc_color);
     graphics_fill_radial(
         ctx,
         bounds,
@@ -180,13 +180,13 @@ void setup_time(Window *window)
 
     if (persist_exists(MESSAGE_KEY_MINUTES_COLOR))
     {
-        config_min_color = persist_read_int(MESSAGE_KEY_MINUTES_COLOR);
-        APP_LOG(APP_LOG_LEVEL_INFO, "Read time color: %x", config_min_color);
-        min_color = GColorFromHEX(config_min_color);
+        config_arc_color = persist_read_int(MESSAGE_KEY_MINUTES_COLOR);
+        APP_LOG(APP_LOG_LEVEL_INFO, "Read arc color: %x", config_arc_color);
+        arc_color = GColorFromHEX(config_arc_color);
     }
     else
     {
-        min_color = COLOR_FALLBACK(DEFAULT_TIME_MIN_COLOR, GColorBlack);
+        arc_color = COLOR_FALLBACK(DEFAULT_TIME_MIN_COLOR, GColorBlack);
     }
 
     if (persist_exists(MESSAGE_KEY_HOUR_AS_TEXT))

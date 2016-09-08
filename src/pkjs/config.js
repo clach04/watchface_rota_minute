@@ -29,7 +29,7 @@ module.exports = [
             },
             {
                 "type": "color",
-                "label": "Minutes",
+                "label": "Arc",
                 "messageKey": "MINUTES_COLOR",
                 "defaultValue": "0000FF"
             }
