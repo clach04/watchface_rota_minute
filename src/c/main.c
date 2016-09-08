@@ -16,9 +16,9 @@
 #else
     static GColor       arc_color;
 #endif /* PBL_BW */
-int config_arc_color;
+static int config_arc_color;
 static Layer *time_layer=NULL;
-bool draw_hour_as_text=true;
+static bool draw_hour_as_text=true;
 
 // FIXME test BT image. Bluetooth text works.
 
@@ -59,7 +59,7 @@ bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
     return wrote_config;
 }
 
-void digits_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, char *digits_str)
+static void digits_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, char *digits_str)
 {
     GPoint center = grect_center_point(&bounds);
 
@@ -91,7 +91,7 @@ void digits_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, char 
      */
 }
 
-void draw_arc_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, int angle)
+static void draw_arc_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, int angle)
 {
     // https://developer.pebble.com/docs/c/Graphics/Graphics_Context/
     //graphics_context_set_antialiased(ctx, true);
@@ -108,7 +108,7 @@ void draw_arc_display_update_proc(Layer *layer, GContext* ctx, GRect bounds, int
         );
 }
 
-void update_time_update_proc(Layer *layer, GContext* ctx)
+static void update_time_update_proc(Layer *layer, GContext* ctx)
 {
     time_t now = time(NULL);
     struct tm *t = localtime(&now);
