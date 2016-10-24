@@ -53,8 +53,11 @@
     //#define DATE_POS GRect(0, 148, 125, 168) /* bottom of "g" in "Aug" starting to be cut off . Top RHS may be be better (see Capinion/stormtrooper/spawn */
 //#define DATE_FMT_STR "%a\n%b\n%d"
 //#define MAX_DATE_STR "Thu\n00\nAug" /* if custom version of DATE_FMT_STR is set, MAX_DATE_STR  needs to be updated too */
-#define DATE_FMT_STR "%b\n%d"
-#define MAX_DATE_STR "00\nAug" /* if custom version of DATE_FMT_STR is set, MAX_DATE_STR  needs to be updated too */
+//#define DATE_FMT_STR "%b\n%d"
+//#define MAX_DATE_STR "00\nAug" /* if custom version of DATE_FMT_STR is set, MAX_DATE_STR  needs to be updated too */
+#define DATE_FMT_STR "%a %b\n%d"
+#define MAX_DATE_STR "Thu Aug\n00"
+
 #define DATE_POS GRect(0, -5, 140, 168) /* probably taller than really needed */
 
     #ifdef DRAW_BATTERY
