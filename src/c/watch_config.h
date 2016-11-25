@@ -23,7 +23,7 @@
 #undef DEBUG_TIME
 
 // Show step count using builtin code
-#define USE_HEALTH
+#undef USE_HEALTH
 //#define UPDATE_HEALTH_ON_ACTIVITY  /* If not set, only updates step count display once per minute */
 
 #define DRAW_BATTERY
