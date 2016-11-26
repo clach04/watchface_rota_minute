@@ -1,31 +1,47 @@
 {
     "author": "clach04",
-    "dependencies": {},
-    "keywords": [
-        "pebble-app"
-    ],
+    "dependencies": {
+        "pebble-clay": "^1.0.1"
+    },
+    "keywords": [],
     "name": "rota-minute",
     "pebble": {
         "capabilities": [
-            ""
+            "configurable"
         ],
         "displayName": "Rota Minute",
         "enableMultiJS": true,
-        "messageKeys": [],
+        "messageKeys": [
+            "TIME_COLOR",
+            "VIBRATE_ON_DISCONNECT",
+            "BACKGROUND_COLOR",
+            "MAJOR_VERSION",
+            "MINUTES_COLOR",
+            "HOUR_AS_TEXT"
+        ],
         "projectType": "native",
         "resources": {
-            "media": []
+            "media": [
+                {
+                    "file": "images/menu_icon.png",
+                    "menuIcon": true,
+                    "name": "IMAGE_MENU_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
         },
         "sdkVersion": "3",
         "targetPlatforms": [
             "aplite",
             "basalt",
-            "chalk"
+            "chalk",
+            "diorite"
         ],
-        "uuid": "0b9136c9-578f-4752-8ea5-9f389894a393",
+        "uuid": "ea6d0698-b8ea-40c6-bec9-0c43403cc746",
         "watchapp": {
             "watchface": true
         }
     },
-    "version": "1.0.0"
+    "version": "1.5.0"
 }

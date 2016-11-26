@@ -1,0 +1,3 @@
+README.md merge=ours
+src/c/main.c merge=ours
+src/c/watch_config.h merge=ours
