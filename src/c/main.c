@@ -1,9 +1,8 @@
 /*
-** Watchface Framework - Color or Mono
+** Rota Minute Watchface - based on watchface_framework
 **
 **    https://github.com/clach04/watchface_framework
 **
-** This file may not be needed. This is only needed if additional C code is required.
 */
 
 #include <pebble.h>
