@@ -21,6 +21,7 @@
 #undef FONT_NAME
 #undef FONT_SYSTEM_NAME  /* the default font system will be used */
 #undef DEBUG_TIME
+//#define USE_TIME_MACHINE  // NOTE mixing with DEBUG_TIME doesn't make sense
 
 // Show step count using builtin code
 #undef USE_HEALTH
