@@ -165,7 +165,7 @@ static void update_time_update_proc(Layer *layer, GContext* ctx)
     draw_arc_display_update_proc(layer, ctx, bounds, angle);
 }
 
-void update_time()
+void update_time(struct tm *tick_time)
 {
     layer_mark_dirty(time_layer);
 }
