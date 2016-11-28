@@ -112,8 +112,13 @@ static void draw_arc_display_update_proc(Layer *layer, GContext* ctx, GRect boun
 
 static void update_time_update_proc(Layer *layer, GContext* ctx)
 {
+#ifdef TIME_MACHINE
+    // TODO use a macro to redirect localtime() to time_machine_get_time()?
+    struct tm *t = time_machine_get_time();
+#else
     time_t now = time(NULL);
     struct tm *t = localtime(&now);
+#endif
     char digits_array[3]="12";
 
 
