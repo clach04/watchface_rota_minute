@@ -151,8 +151,35 @@ void handle_bluetooth(bool connected)
         #endif /* BT_DISCONNECT_IMAGE */
         if (config_time_vib_on_disconnect && (bluetooth_state != connected))
         {
+            bool do_vib = true;
+
+            // check if quiet time
+            if (quiet_time_is_active())
+            {
+                do_vib = false;
+            }
+#ifdef USE_HEALTH
+            // check if asleep
+            if (do_vib)
+            {
+                HealthActivityMask activities = health_service_peek_current_activities();
+
+                if (activities & HealthActivitySleep)
+                {
+                    do_vib = false;
+                }
+                if (activities & HealthActivityRestfulSleep)
+                {
+                    do_vib = false;
+                }
+            }
+#endif // USE_HEALTH
+
             /* had BT connection then lost it, rather than started disconnected */
-            vibes_short_pulse();  /* vibrate/rumble */
+            if (do_vib)
+            {
+                vibes_short_pulse();  /* vibrate/rumble */
+            }
         }
     }
     bluetooth_state = connected;
@@ -523,11 +550,7 @@ void cleanup_bt_image()
 
 
 #ifndef NO_TEXT_TIME_LAYER
-void update_time() {
-    // Get a tm structure
-    time_t    temp = time(NULL);
-    struct tm *tick_time = localtime(&temp);
-
+void update_time(struct tm *tick_time) {
     // Create a long-lived buffer
     static char buffer[] = MAX_TIME_STR;
 
@@ -636,7 +659,10 @@ void main_window_load(Window *window) {
 #endif /* USE_HEALTH */
 
     /* Make sure the time is displayed from the start */
-    update_time();
+    // Get a tm structure
+    time_t    temp = time(NULL);
+    struct tm *tick_time = localtime(&temp);
+    update_time(tick_time);
 
 #ifndef NO_BATTERY
     /* Ensure battery status is displayed from the start */
@@ -675,16 +701,20 @@ void main_window_unload(Window *window) {
     CLEANUP_TIME();
 
     /* unsubscribe events */
+#ifdef TIME_MACHINE
+    time_machine_tick_timer_service_unsubscribe();
+#else
     tick_timer_service_unsubscribe();
+#endif
 }
 
 void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
-    update_time();
+    update_time(tick_time);
 }
 
 #ifdef DEBUG_TIME
 void debug_tick_handler(struct tm *tick_time, TimeUnits units_changed) {
-    update_time();
+    update_time(tick_time);
 }
 #endif /* DEBUG_TIME */
 
@@ -849,7 +879,19 @@ void init()
     window_stack_push(main_window, true);
 
     /* Register events; TickTimerService, Battery */
+#ifdef TIME_MACHINE
+    time_t now = time(NULL);
+    struct tm* time_machine_start = localtime(&now);
+
+    // Override start time to midnight, (local time)
+    time_machine_start->tm_hour = time_machine_start->tm_min = 0;
+
+    time_machine_init(time_machine_start, TIME_MACHINE_MINUTES, 1000);  // accelerate minutes to seconds
+    //time_machine_init(time_machine_start, TIME_MACHINE_HOURS, 1000);  // accelerate hours to seconds
+    time_machine_tick_timer_service_subscribe(TICK_HANDLER_INTERVAL, TICK_HANDLER);
+#else
     tick_timer_service_subscribe(TICK_HANDLER_INTERVAL, TICK_HANDLER);
+#endif
 #ifdef DEBUG_TIME
     #ifndef DEBUG_TIME_SCREENSHOT
         tick_timer_service_subscribe(SECOND_UNIT, DEBUG_TICK_HANDLER);

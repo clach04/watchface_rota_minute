@@ -1,9 +1,8 @@
 /*
-** Watchface Framework - Color or Mono
+** Rota Minute Watchface - based on watchface_framework
 **
 **    https://github.com/clach04/watchface_framework
 **
-** This file may not be needed. This is only needed if additional C code is required.
 */
 
 #include <pebble.h>
@@ -113,8 +112,13 @@ static void draw_arc_display_update_proc(Layer *layer, GContext* ctx, GRect boun
 
 static void update_time_update_proc(Layer *layer, GContext* ctx)
 {
+#ifdef TIME_MACHINE
+    // TODO use a macro to redirect localtime() to time_machine_get_time()?
+    struct tm *t = time_machine_get_time();
+#else
     time_t now = time(NULL);
     struct tm *t = localtime(&now);
+#endif
     char digits_array[3]="12";
 
 
@@ -166,7 +170,7 @@ static void update_time_update_proc(Layer *layer, GContext* ctx)
     draw_arc_display_update_proc(layer, ctx, bounds, angle);
 }
 
-void update_time()
+void update_time(struct tm *tick_time)
 {
     layer_mark_dirty(time_layer);
 }

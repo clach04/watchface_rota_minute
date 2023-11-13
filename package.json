@@ -1,7 +1,8 @@
 {
     "author": "clach04",
     "dependencies": {
-        "pebble-clay": "^1.0.1"
+        "pebble-clay": "^1.0.1",
+        "pebble-time-machine": "1.0.2"
     },
     "keywords": [],
     "name": "rota-minute",
@@ -43,5 +44,5 @@
             "watchface": true
         }
     },
-    "version": "1.4.0"
+    "version": "1.5.0"
 }

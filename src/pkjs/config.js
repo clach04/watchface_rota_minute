@@ -49,6 +49,10 @@ module.exports = [
                 "defaultValue": false
             },
             {
+                "type": "text",
+                "defaultValue": "Will NOT vibrate during Quiet Time or if health monitoring detects sleeping."
+            },
+            {
                 "type": "toggle",
                 "label": "Display hour as text",
                 "messageKey": "HOUR_AS_TEXT",
