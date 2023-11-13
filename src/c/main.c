@@ -104,7 +104,7 @@ static void draw_arc_display_update_proc(Layer *layer, GContext* ctx, GRect boun
         ctx,
         bounds,
         GOvalScaleModeFitCircle,
-        7, /* inset, stroke width */
+        3 * 7, /* inset, stroke width */ // TODO make this a config option
         DEG_TO_TRIGANGLE(0), /* angle_start */
         (TRIG_MAX_ANGLE / 360) * angle /* angle_end */
         );

@@ -5,12 +5,12 @@
         "pebble-time-machine": "1.0.2"
     },
     "keywords": [],
-    "name": "rota-minute",
+    "name": "rota-minute-dev",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "Rota Minute",
+        "displayName": "Rota Minute Dev",
         "enableMultiJS": true,
         "messageKeys": [
             "TIME_COLOR",
