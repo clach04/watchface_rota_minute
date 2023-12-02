@@ -21,7 +21,7 @@
 #undef FONT_NAME
 #undef FONT_SYSTEM_NAME  /* the default font system will be used */
 #undef DEBUG_TIME
-//#define USE_TIME_MACHINE  // NOTE mixing with DEBUG_TIME doesn't make sense
+//#define USE_TIME_MACHINE  // NOTE mixing with DEBUG_TIME doesn't make sense. Requires update to package.json for dependencies
 
 // Show step count using builtin code
 #undef USE_HEALTH
@@ -29,6 +29,9 @@
 
 #define DRAW_BATTERY
 #define DRAW_SMALL_BATTERY
+
+//#define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
+//#define QUIET_TIME_IMAGE_GRECT GRect(20, 20, 20, 20)  // Example assumes a 20x20 image
 
 #ifdef PBL_ROUND /* 180x180 */
 /*TODO center/move right*/
@@ -71,4 +74,9 @@
 /* for screen shots and font testing
 #define DEBUG_TIME
 #define DEBUG_TIME_SCREENSHOT
- */
+// ensure quiet time and bluetooth disconnection info is shown
+#ifndef quiet_time_is_active  // so not aplite
+#define quiet_time_is_active() true  // DEBUG!
+#endif
+#define bluetooth_connection_service_peek() false  // DEBUG!
+*/
