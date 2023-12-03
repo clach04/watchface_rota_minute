@@ -5,12 +5,12 @@
         "pebble-time-machine": "1.0.2"
     },
     "keywords": [],
-    "name": "rota-minute-dev",
+    "name": "rota-minute",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "Rota Minute Dev",
+        "displayName": "Rota Minute",
         "enableMultiJS": true,
         "messageKeys": [
             "TIME_COLOR",
@@ -40,7 +40,7 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "c50558c9-1ceb-4d8f-b9c3-a6e0afcacd35",
+        "uuid": "ea6d0698-b8ea-40c6-bec9-0c43403cc746",
         "watchapp": {
             "watchface": true
         }
