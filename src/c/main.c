@@ -37,7 +37,7 @@ bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
         APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_ARC_WIDTH");
         config_arc_width = (uint16_t)t->value->int32;  // TODO review type/struct member name
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting arc width: %d", config_arc_width);
-        persist_write_int(MESSAGE_KEY_ARC_WIDTH, config_arc_color);
+        persist_write_int(MESSAGE_KEY_ARC_WIDTH, config_arc_width);
         wrote_config = true;
         APP_LOG(APP_LOG_LEVEL_DEBUG, "MESSAGE_KEY_ARC_WIDTH DONE");
     }
@@ -200,7 +200,7 @@ void setup_time(Window *window)
 
     if (persist_exists(MESSAGE_KEY_ARC_WIDTH))
     {
-        config_arc_width = (uint16_t) persist_read_int(MESSAGE_KEY_MINUTES_COLOR);
+        config_arc_width = (uint16_t) persist_read_int(MESSAGE_KEY_ARC_WIDTH);
         APP_LOG(APP_LOG_LEVEL_INFO, "Read arc width: %d", config_arc_width);
         if (config_arc_width < 7)
         {
