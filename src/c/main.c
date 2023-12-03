@@ -16,6 +16,7 @@
     static GColor       arc_color;
 #endif /* PBL_BW */
 static int config_arc_color;
+static uint16_t config_arc_width=3 * 7;
 static Layer *time_layer=NULL;
 static bool draw_hour_as_text=true;
 
@@ -29,6 +30,23 @@ bool custom_in_recv_handler(DictionaryIterator *iterator, void *context)
     /* NOTE if new entries are added, increase MAX_MESSAGE_SIZE_OUT macro */
 
     APP_LOG(APP_LOG_LEVEL_DEBUG, "custom_in_recv_handler() called");
+    if (persist_exists(MESSAGE_KEY_ARC_WIDTH))
+    {
+        config_arc_width = (uint16_t) persist_read_int(MESSAGE_KEY_MINUTES_COLOR);
+        APP_LOG(APP_LOG_LEVEL_INFO, "Read arc width: %x", config_arc_width);
+    }
+
+    t = dict_find(iterator, MESSAGE_KEY_ARC_WIDTH);
+    if (t)
+    {
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_ARC_WIDTH");
+        config_arc_color = (uint16_t)t->value->int32;  // TODO review type/struct member name
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting arc width: %d", config_arc_width);
+        persist_write_int(MESSAGE_KEY_ARC_WIDTH, config_arc_color);
+        wrote_config = true;
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "MESSAGE_KEY_ARC_WIDTH DONE");
+    }
+
     t = dict_find(iterator, MESSAGE_KEY_MINUTES_COLOR);
     if (t)
     {
@@ -104,7 +122,7 @@ static void draw_arc_display_update_proc(Layer *layer, GContext* ctx, GRect boun
         ctx,
         bounds,
         GOvalScaleModeFitCircle,
-        3 * 7, /* inset, stroke width */ // TODO make this a config option
+        config_arc_width,  // inset, stroke width
         DEG_TO_TRIGANGLE(0), /* angle_start */
         (TRIG_MAX_ANGLE / 360) * angle /* angle_end */
         );
@@ -184,6 +202,16 @@ void setup_time(Window *window)
 {
     Layer *window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_bounds(window_layer);
+
+    if (persist_exists(MESSAGE_KEY_ARC_WIDTH))
+    {
+        config_arc_width = (uint16_t) persist_read_int(MESSAGE_KEY_MINUTES_COLOR);
+        APP_LOG(APP_LOG_LEVEL_INFO, "Read arc width: %d", config_arc_width);
+    }
+    else
+    {
+        APP_LOG(APP_LOG_LEVEL_INFO, "Default arc width: %d", config_arc_width);
+    }
 
     if (persist_exists(MESSAGE_KEY_MINUTES_COLOR))
     {

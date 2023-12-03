@@ -18,7 +18,8 @@
             "BACKGROUND_COLOR",
             "MAJOR_VERSION",
             "MINUTES_COLOR",
-            "HOUR_AS_TEXT"
+            "HOUR_AS_TEXT",
+            "ARC_WIDTH"
         ],
         "projectType": "native",
         "resources": {

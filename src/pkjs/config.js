@@ -61,6 +61,16 @@ module.exports = [
                 "messageKey": "HOUR_AS_TEXT",
                 "defaultValue": true
             }
+            },
+            {
+                "type": "slider",
+                "label": "Arc width",
+                "messageKey": "ARC_WIDTH",
+                "defaultValue": 3 * 7,
+                "min": 7,
+                "max": 5 * 7,
+                "step": 1
+            }
         ]
     },
     {
