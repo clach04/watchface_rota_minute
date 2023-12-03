@@ -2,7 +2,7 @@
 
 Analog digital hybrid Pebble watchface.
 
-<img src="https://raw.githubusercontent.com/clach04/watchface_rota_minute/framework_rota/assets/appstore/basalt_black_24.png" alt="Basalt 24 hour dark screenshot"> 
+<img src="https://github.com/clach04/watchface_rota_minute/blob/master/assets/appstore/basalt_black_24.png" alt="Basalt 24 hour dark screenshot">
 
 Supports all Pebble versions, from Pebble 2 (Diorite) to Aplite with quick view support.
 
