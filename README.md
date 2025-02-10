@@ -1,6 +1,7 @@
 # Watchface Rota Minute
 
 Analog digital hybrid Pebble watchface.
+Also see https://github.com/clach04/clock_rota_minute_pillow
 
 <img src="https://github.com/clach04/watchface_rota_minute/blob/master/assets/appstore/basalt_black_24.png" alt="Basalt 24 hour dark screenshot"> <img src="https://github.com/clach04/watchface_rota_minute/blob/master/assets/appstore/basalt_white_24h.png" alt="Basalt 24 hour light screenshot"> <img src="https://github.com/clach04/watchface_rota_minute/blob/master/assets/appstore/basalt_white_24h_quickview.png" alt="Basalt 24 hour light quickview screenshot"> <img src="https://github.com/clach04/watchface_rota_minute/blob/master/assets/appstore/chalk_24h_white.png" alt="Chalk 24 hour light quickview screenshot"> <img src="https://github.com/clach04/watchface_rota_minute/blob/master/assets/appstore/bw_black_12h.png" alt="Mono 12 hour dark quickview screenshot">
 
