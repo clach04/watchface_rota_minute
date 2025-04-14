@@ -1,3 +1,5 @@
+#include <inttypes.h>
+
 #include <pebble.h>
 #include <pebble_process_info.h>  // ONLY for get_major_app_version()
 extern const PebbleProcessInfo __pbl_app_info;  // ONLY for get_major_app_version()
@@ -15,6 +17,12 @@ extern const PebbleProcessInfo __pbl_app_info;  // ONLY for get_major_app_versio
         #define GColorFromHEX(int_color) int_color == 0 ? GColorBlack : GColorWhite
     #endif /* GColorFromHEX */
 #endif /* PBL_BW */
+
+//#define myDEBUG_HEAP
+//#define DEBUG_STACK
+#ifdef DEBUG_STACK
+    static uint32_t stack_initial;
+#endif /* DEBUG_STACK */
 
 Window    *main_window=NULL;
 #ifndef NO_TEXT_TIME_LAYER
@@ -610,6 +618,38 @@ void update_time(struct tm *tick_time) {
     // Create a long-lived buffer
     static char buffer[] = MAX_TIME_STR;
 
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() entry", __func__);
+    #ifdef DEBUG_STACK
+        register uint32_t sp __asm__("sp");
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() sp=%p (%ju bytes)", __func__, (void*) sp, (uintmax_t) stack_initial - sp);
+    #endif /* DEBUG_STACK */
+
+    #ifdef myDEBUG_HEAP
+        // SDK 4.3 allows %z... unless using aplite target!? :-(
+        //APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() heap free %z bytes heap used %z bytes", __func__, heap_bytes_free(), heap_bytes_used());
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() heap free %ju bytes heap used %ju bytes", __func__, (uintmax_t) heap_bytes_free(), (uintmax_t) heap_bytes_used());
+    #endif /* myDEBUG_HEAP */
+
+//#define DEBUG_UTC_TIME
+#ifdef DEBUG_UTC_TIME
+    // Older firmware were local time only, FW3+ has both UTC and localtime APIs - BUT emulator for Aplite appears to differ from actual hardware (hardware has UTC for, emulator does not)
+    static char utc_str_buffer[]="00:00";
+    time_t utc_time_t = time(NULL);
+    time_t local_time_t = time(NULL);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "utc_time_t   %jd", (intmax_t) utc_time_t);  // TODO %d not ideal for time_t, under Pebble this happens to be TIME_T == long - cast into something larger to be sure.
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "utc_time_t   %ju", (uintmax_t) utc_time_t);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "local_time_t %jd", (intmax_t) local_time_t);
+    struct tm *utc_tm = gmtime(&utc_time_t);
+    struct tm *local_tm = localtime(&local_time_t);
+
+    strftime(utc_str_buffer, sizeof(utc_str_buffer), "%R", utc_tm);  // 24-hour format
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "utc_str_buffer   UTC=%s", utc_str_buffer);
+    strftime(utc_str_buffer, sizeof(utc_str_buffer), "%R", local_tm);  // 24-hour format
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "utc_str_buffer local=%s", utc_str_buffer);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "utc_time_t   %jd", (intmax_t) utc_time_t);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "local_time_t %jd", (intmax_t) local_time_t);
+#endif /* DEBUG_UTC_TIME */
+
 #ifdef DEBUG_TIME
     {
         static int     str_counter=0;
@@ -801,16 +841,30 @@ void in_recv_handler(DictionaryIterator *iterator, void *context)
     /* NOTE if new entries are added, increase MAX_MESSAGE_SIZE_OUT macro */
 
     APP_LOG(APP_LOG_LEVEL_DEBUG, "in_recv_handler() called");
+    #ifdef DEBUG_STACK
+        register uint32_t sp __asm__("sp");
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() sp=%p (%ju bytes)", __func__, (void*) sp, (uintmax_t) stack_initial - sp);
+    #endif /* DEBUG_STACK */
+
+    #ifdef myDEBUG_HEAP
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() heap free %ju bytes heap used %ju bytes", __func__, (uintmax_t) heap_bytes_free(), (uintmax_t) heap_bytes_used());
+    #endif /* myDEBUG_HEAP */
+
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() dictionary size %d bytes", __func__, (void*) iterator->end - (void*) iterator->dictionary);
+
     t = dict_find(iterator, MESSAGE_KEY_BACKGROUND_COLOR);
     if (t)
     {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_BACKGROUND_COLOR");
-        config_background_color = (int)t->value->int32;
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting background color: 0x%06x", config_background_color);
-        persist_write_int(MESSAGE_KEY_BACKGROUND_COLOR, config_background_color);
-        wrote_config = true;
-        background_color = GColorFromHEX(config_background_color);
-        window_set_background_color(main_window, background_color);
+        if (config_background_color != (int)t->value->int32)  // only update config if setting is different
+        {
+            config_background_color = (int)t->value->int32;
+            APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting background color: 0x%06x", config_background_color);
+            persist_write_int(MESSAGE_KEY_BACKGROUND_COLOR, config_background_color);
+            wrote_config = true;
+            background_color = GColorFromHEX(config_background_color);
+            window_set_background_color(main_window, background_color);
+        }
         APP_LOG(APP_LOG_LEVEL_DEBUG, "BACKGROUND COLOR DONE");
     }
 
@@ -818,20 +872,26 @@ void in_recv_handler(DictionaryIterator *iterator, void *context)
     if (t)
     {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_VIBRATE_ON_DISCONNECT");
-        config_time_vib_on_disconnect = (bool)t->value->int32;  /* this doesn't feel correct... */
-        APP_LOG(APP_LOG_LEVEL_INFO, "Persisting vib_on_disconnect: %d", (int) config_time_vib_on_disconnect);
-        persist_write_bool(MESSAGE_KEY_VIBRATE_ON_DISCONNECT, config_time_vib_on_disconnect);
-        wrote_config = true;
+        if (config_time_vib_on_disconnect != (bool)t->value->int32)  /* this doesn't feel correct... */
+        {
+            config_time_vib_on_disconnect = (bool)t->value->int32;  /* this doesn't feel correct... */
+            APP_LOG(APP_LOG_LEVEL_INFO, "Persisting vib_on_disconnect: %d", (int) config_time_vib_on_disconnect);
+            persist_write_bool(MESSAGE_KEY_VIBRATE_ON_DISCONNECT, config_time_vib_on_disconnect);
+            wrote_config = true;
+        }
     }
 
     t = dict_find(iterator, MESSAGE_KEY_TIME_COLOR);
     if (t)
     {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_TIME_COLOR");
-        config_time_color = (int)t->value->int32;
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting time color: 0x%06x", config_time_color);
-        persist_write_int(MESSAGE_KEY_TIME_COLOR, config_time_color);
-        wrote_config = true;
+        if (config_time_color != (int)t->value->int32)
+        {
+            config_time_color = (int)t->value->int32;
+            APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting time color: 0x%06x", config_time_color);
+            persist_write_int(MESSAGE_KEY_TIME_COLOR, config_time_color);
+            wrote_config = true;
+        }
         time_color = GColorFromHEX(config_time_color);
 #ifndef NO_TEXT_TIME_LAYER
         text_layer_set_text_color(time_layer, time_color);
@@ -867,7 +927,13 @@ void in_recv_handler(DictionaryIterator *iterator, void *context)
 
     if (wrote_config || custom_wrote_config)
     {
-        persist_write_int(MESSAGE_KEY_MAJOR_VERSION, major_version);
+        int stored_major_version = -1;
+        if (persist_exists(MESSAGE_KEY_MAJOR_VERSION))
+        {
+            stored_major_version = persist_read_int(MESSAGE_KEY_MAJOR_VERSION);
+        }
+        if (stored_major_version != major_version)
+            persist_write_int(MESSAGE_KEY_MAJOR_VERSION, major_version);
     }
 }
 
@@ -979,6 +1045,11 @@ void init()
 
 #ifdef USE_GENERIC_MAIN
 int main(void) {
+    #ifdef DEBUG_STACK
+        register uint32_t sp __asm__("sp");
+        stack_initial = sp;
+    #endif /* DEBUG_STACK */
+
     init();
     app_event_loop();
     deinit();
