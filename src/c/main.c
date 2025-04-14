@@ -10,11 +10,7 @@
 #include "watchface.h"
 
 #define digits_color time_color
-#ifdef PBL_BW
-    #define arc_color digits_color
-#else
-    static GColor       arc_color;
-#endif /* PBL_BW */
+static GColor       arc_color;
 static int config_arc_color;
 static uint16_t config_arc_width=3 * 7;
 static Layer *time_layer=NULL;
@@ -220,7 +216,7 @@ void setup_time(Window *window)
     }
     else
     {
-        arc_color = COLOR_FALLBACK(DEFAULT_TIME_ARC_COLOR, GColorBlack);
+        arc_color = COLOR_FALLBACK(DEFAULT_TIME_ARC_COLOR, GColorBlack);  // TODO revisit this DEFAULT_TIME_ARC_COLOR?
     }
 
     if (persist_exists(MESSAGE_KEY_HOUR_AS_TEXT))
