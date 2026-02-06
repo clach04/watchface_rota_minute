@@ -62,7 +62,7 @@
         // FIXME hard code date and battery location - see framework sample
         // TODO add TODO notes to dynamically determine location? as is done for circle and time text?
         #define HEALTH_POS GRect(0, 40, 200, 228)
-        #define DATE_POS GRect(0, -5, 200, 228) /* probably taller than really needed */
+        #define DATE_POS GRect(-5, 0, 200, 228) /* probably taller than really needed */
         #ifdef DRAW_BATTERY
             #define BAT_POS GRect(5, 215, 200, 228)
         #else
