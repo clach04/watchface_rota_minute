@@ -8,6 +8,7 @@
 #include <pebble.h>
 
 #include "watchface.h"
+extern void handle_quiet_time(void); // FIXME header file
 
 #define digits_color time_color
 #ifdef PBL_BW
@@ -181,6 +182,10 @@ static void update_time_update_proc(Layer *layer, GContext* ctx)
     }
 #endif /* NO_DATE */
     draw_arc_display_update_proc(layer, ctx, bounds, angle);
+
+//#ifdef QUIET_TIME_IMAGE  // TODO condition on QUIET_TIME_IMAGE or QUIET_TIME_POS
+    handle_quiet_time();
+//#endif // QUIET_TIME_IMAGE
 }
 
 void update_time(struct tm *tick_time)
