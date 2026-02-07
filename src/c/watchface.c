@@ -1,7 +1,9 @@
+#include <inttypes.h>
+
 #include <pebble.h>
 #include <pebble_process_info.h>  // ONLY for get_major_app_version()
 extern const PebbleProcessInfo __pbl_app_info;  // ONLY for get_major_app_version()
-    
+
 #ifdef USE_SHADOW_TIME_EFFECT
 #include "effect_layer.h"  /* from https://github.com/ygalanter/EffectLayer */
 #endif /* USE_SHADOW_TIME_EFFECT */
@@ -15,6 +17,12 @@ extern const PebbleProcessInfo __pbl_app_info;  // ONLY for get_major_app_versio
         #define GColorFromHEX(int_color) int_color == 0 ? GColorBlack : GColorWhite
     #endif /* GColorFromHEX */
 #endif /* PBL_BW */
+
+//#define myDEBUG_HEAP
+//#define DEBUG_STACK
+#ifdef DEBUG_STACK
+    static uint32_t stack_initial;
+#endif /* DEBUG_STACK */
 
 Window    *main_window=NULL;
 #ifndef NO_TEXT_TIME_LAYER
@@ -399,6 +407,9 @@ void cleanup_battery()
 #ifdef QUIET_TIME_IMAGE
 BitmapLayer *quiet_time_blayer=NULL;
 GBitmap     *quiet_time_bitmap=NULL;
+#else
+TextLayer *quiet_time_tlayer=NULL;
+#endif // QUIET_TIME_IMAGE
 
 void handle_quiet_time(void)
 {
@@ -406,12 +417,20 @@ void handle_quiet_time(void)
     if (quiet_time_is_active())
     {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() quiet_time_is_active", __func__);
+#ifdef QUIET_TIME_IMAGE
         bitmap_layer_set_bitmap(quiet_time_blayer, quiet_time_bitmap);
+#else
+        text_layer_set_text(quiet_time_tlayer, QUIET_TIME_STR);
+#endif // QUIET_TIME_IMAGE
     }
     else
     {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() quiet_time_is_not_active", __func__);
+#ifdef QUIET_TIME_IMAGE
         bitmap_layer_set_bitmap(quiet_time_blayer, NULL);
+#else
+        text_layer_set_text(quiet_time_tlayer, "");
+#endif // QUIET_TIME_IMAGE
     }
 
     APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() exit", __func__);
@@ -422,6 +441,7 @@ void setup_quiet_time(Window *window)
     GRect bounds;
 
     APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() entry", __func__);
+#ifdef QUIET_TIME_IMAGE
     quiet_time_bitmap = gbitmap_create_with_resource(QUIET_TIME_IMAGE);
 
     #ifdef QUIET_TIME_IMAGE_GRECT
@@ -439,12 +459,22 @@ void setup_quiet_time(Window *window)
 
     bitmap_layer_set_compositing_mode(quiet_time_blayer, GCompOpSet);
     layer_add_child(window_get_root_layer(main_window), bitmap_layer_get_layer(quiet_time_blayer));
+#else
+    quiet_time_tlayer = text_layer_create(QUIET_TIME_POS);
+    text_layer_set_text_color(quiet_time_tlayer, time_color);
+    text_layer_set_background_color(quiet_time_tlayer, GColorClear);
+    text_layer_set_font(quiet_time_tlayer, fonts_get_system_font(FONT_BT_SYSTEM_NAME));  // TODO seperate quiet time font from BT/BLUETOOTH
+    text_layer_set_text_alignment(quiet_time_tlayer, BT_ALIGN);
+    layer_add_child(window_get_root_layer(main_window), text_layer_get_layer(quiet_time_tlayer));
+    text_layer_set_text(quiet_time_tlayer, "");
+#endif // QUIET_TIME_IMAGE
 
     APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() exit", __func__);
 }
 
 void cleanup_quiet_time(void)
 {
+#ifdef QUIET_TIME_IMAGE
     /* Destroy GBitmap */
     if (quiet_time_bitmap)
     {
@@ -456,8 +486,10 @@ void cleanup_quiet_time(void)
     {
         bitmap_layer_destroy(quiet_time_blayer);
     }
-}
+#else
+    text_layer_destroy(quiet_time_tlayer);
 #endif // QUIET_TIME_IMAGE
+}
 
 
 #ifndef NO_TEXT_TIME_LAYER
@@ -610,6 +642,38 @@ void update_time(struct tm *tick_time) {
     // Create a long-lived buffer
     static char buffer[] = MAX_TIME_STR;
 
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() entry", __func__);
+    #ifdef DEBUG_STACK
+        register uint32_t sp __asm__("sp");
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() sp=%p (%ju bytes)", __func__, (void*) sp, (uintmax_t) stack_initial - sp);
+    #endif /* DEBUG_STACK */
+
+    #ifdef myDEBUG_HEAP
+        // SDK 4.3 allows %z... unless using aplite target!? :-(
+        //APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() heap free %z bytes heap used %z bytes", __func__, heap_bytes_free(), heap_bytes_used());
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() heap free %ju bytes heap used %ju bytes", __func__, (uintmax_t) heap_bytes_free(), (uintmax_t) heap_bytes_used());
+    #endif /* myDEBUG_HEAP */
+
+//#define DEBUG_UTC_TIME
+#ifdef DEBUG_UTC_TIME
+    // Older firmware were local time only, FW3+ has both UTC and localtime APIs - BUT emulator for Aplite appears to differ from actual hardware (hardware has UTC for, emulator does not)
+    static char utc_str_buffer[]="00:00";
+    time_t utc_time_t = time(NULL);
+    time_t local_time_t = time(NULL);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "utc_time_t   %jd", (intmax_t) utc_time_t);  // TODO %d not ideal for time_t, under Pebble this happens to be TIME_T == long - cast into something larger to be sure.
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "utc_time_t   %ju", (uintmax_t) utc_time_t);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "local_time_t %jd", (intmax_t) local_time_t);
+    struct tm *utc_tm = gmtime(&utc_time_t);
+    struct tm *local_tm = localtime(&local_time_t);
+
+    strftime(utc_str_buffer, sizeof(utc_str_buffer), "%R", utc_tm);  // 24-hour format
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "utc_str_buffer   UTC=%s", utc_str_buffer);
+    strftime(utc_str_buffer, sizeof(utc_str_buffer), "%R", local_tm);  // 24-hour format
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "utc_str_buffer local=%s", utc_str_buffer);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "utc_time_t   %jd", (intmax_t) utc_time_t);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "local_time_t %jd", (intmax_t) local_time_t);
+#endif /* DEBUG_UTC_TIME */
+
 #ifdef DEBUG_TIME
     {
         static int     str_counter=0;
@@ -668,9 +732,9 @@ void update_time(struct tm *tick_time) {
     update_health();
 #endif /* USE_HEALTH */
 
-#ifdef QUIET_TIME_IMAGE
+//#ifdef QUIET_TIME_IMAGE  // TODO condition on QUIET_TIME_IMAGE or QUIET_TIME_POS
     handle_quiet_time();
-#endif // QUIET_TIME_IMAGE
+//#endif // QUIET_TIME_IMAGE
 
 #ifdef DEBUG_TIME_PAUSE
     psleep(DEBUG_TIME_PAUSE);
@@ -718,9 +782,9 @@ void main_window_load(Window *window) {
     setup_health(window);
 #endif /* USE_HEALTH */
 
-#ifdef QUIET_TIME_IMAGE
+//#ifdef QUIET_TIME_IMAGE  // TODO condition on QUIET_TIME_IMAGE or QUIET_TIME_POS
     setup_quiet_time(window);
-#endif // QUIET_TIME_IMAGE
+//#endif // QUIET_TIME_IMAGE
 
     /* Make sure the time is displayed from the start */
     // Get a tm structure
@@ -736,9 +800,9 @@ void main_window_load(Window *window) {
 
 void main_window_unload(Window *window) {
 
-#ifdef QUIET_TIME_IMAGE
+//#ifdef QUIET_TIME_IMAGE  // TODO condition on QUIET_TIME_IMAGE or QUIET_TIME_POS
     cleanup_quiet_time();
-#endif // QUIET_TIME_IMAGE
+//#endif // QUIET_TIME_IMAGE
 
 #ifdef USE_HEALTH
     cleanup_health();
@@ -801,16 +865,30 @@ void in_recv_handler(DictionaryIterator *iterator, void *context)
     /* NOTE if new entries are added, increase MAX_MESSAGE_SIZE_OUT macro */
 
     APP_LOG(APP_LOG_LEVEL_DEBUG, "in_recv_handler() called");
+    #ifdef DEBUG_STACK
+        register uint32_t sp __asm__("sp");
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() sp=%p (%ju bytes)", __func__, (void*) sp, (uintmax_t) stack_initial - sp);
+    #endif /* DEBUG_STACK */
+
+    #ifdef myDEBUG_HEAP
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() heap free %ju bytes heap used %ju bytes", __func__, (uintmax_t) heap_bytes_free(), (uintmax_t) heap_bytes_used());
+    #endif /* myDEBUG_HEAP */
+
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() dictionary size %d bytes", __func__, (void*) iterator->end - (void*) iterator->dictionary);
+
     t = dict_find(iterator, MESSAGE_KEY_BACKGROUND_COLOR);
     if (t)
     {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_BACKGROUND_COLOR");
-        config_background_color = (int)t->value->int32;
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting background color: 0x%06x", config_background_color);
-        persist_write_int(MESSAGE_KEY_BACKGROUND_COLOR, config_background_color);
-        wrote_config = true;
-        background_color = GColorFromHEX(config_background_color);
-        window_set_background_color(main_window, background_color);
+        if (config_background_color != (int)t->value->int32)  // only update config if setting is different
+        {
+            config_background_color = (int)t->value->int32;
+            APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting background color: 0x%06x", config_background_color);
+            persist_write_int(MESSAGE_KEY_BACKGROUND_COLOR, config_background_color);
+            wrote_config = true;
+            background_color = GColorFromHEX(config_background_color);
+            window_set_background_color(main_window, background_color);
+        }
         APP_LOG(APP_LOG_LEVEL_DEBUG, "BACKGROUND COLOR DONE");
     }
 
@@ -818,20 +896,26 @@ void in_recv_handler(DictionaryIterator *iterator, void *context)
     if (t)
     {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_VIBRATE_ON_DISCONNECT");
-        config_time_vib_on_disconnect = (bool)t->value->int32;  /* this doesn't feel correct... */
-        APP_LOG(APP_LOG_LEVEL_INFO, "Persisting vib_on_disconnect: %d", (int) config_time_vib_on_disconnect);
-        persist_write_bool(MESSAGE_KEY_VIBRATE_ON_DISCONNECT, config_time_vib_on_disconnect);
-        wrote_config = true;
+        if (config_time_vib_on_disconnect != (bool)t->value->int32)  /* this doesn't feel correct... */
+        {
+            config_time_vib_on_disconnect = (bool)t->value->int32;  /* this doesn't feel correct... */
+            APP_LOG(APP_LOG_LEVEL_INFO, "Persisting vib_on_disconnect: %d", (int) config_time_vib_on_disconnect);
+            persist_write_bool(MESSAGE_KEY_VIBRATE_ON_DISCONNECT, config_time_vib_on_disconnect);
+            wrote_config = true;
+        }
     }
 
     t = dict_find(iterator, MESSAGE_KEY_TIME_COLOR);
     if (t)
     {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_TIME_COLOR");
-        config_time_color = (int)t->value->int32;
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting time color: 0x%06x", config_time_color);
-        persist_write_int(MESSAGE_KEY_TIME_COLOR, config_time_color);
-        wrote_config = true;
+        if (config_time_color != (int)t->value->int32)
+        {
+            config_time_color = (int)t->value->int32;
+            APP_LOG(APP_LOG_LEVEL_DEBUG, "Persisting time color: 0x%06x", config_time_color);
+            persist_write_int(MESSAGE_KEY_TIME_COLOR, config_time_color);
+            wrote_config = true;
+        }
         time_color = GColorFromHEX(config_time_color);
 #ifndef NO_TEXT_TIME_LAYER
         text_layer_set_text_color(time_layer, time_color);
@@ -867,7 +951,13 @@ void in_recv_handler(DictionaryIterator *iterator, void *context)
 
     if (wrote_config || custom_wrote_config)
     {
-        persist_write_int(MESSAGE_KEY_MAJOR_VERSION, major_version);
+        int stored_major_version = -1;
+        if (persist_exists(MESSAGE_KEY_MAJOR_VERSION))
+        {
+            stored_major_version = persist_read_int(MESSAGE_KEY_MAJOR_VERSION);
+        }
+        if (stored_major_version != major_version)
+            persist_write_int(MESSAGE_KEY_MAJOR_VERSION, major_version);
     }
 }
 
@@ -892,9 +982,77 @@ void init()
     time_color = DEFAULT_TIME_COLOR;
     background_color = DEFAULT_BACKGROUND_COLOR;
 
+    APP_LOG(APP_LOG_LEVEL_INFO, "PBL_DISPLAY_HEIGHT : %d", PBL_DISPLAY_HEIGHT);
+    APP_LOG(APP_LOG_LEVEL_INFO, "PBL_DISPLAY_WIDTH : %d", PBL_DISPLAY_WIDTH);
+
+    // https://developer.repebble.com/docs/c/Foundation/WatchInfo/#WatchInfoModel
+    APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model: %d", watch_info_get_model());
+    #ifdef DEBUG_HARDWARE_ID
+    // Generated code
+    switch(watch_info_get_model())
+    {
+        case WATCH_INFO_MODEL_UNKNOWN:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_UNKNOWN");  // Unknown model.
+            break;
+
+        case WATCH_INFO_MODEL_PEBBLE_ORIGINAL:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_PEBBLE_ORIGINAL");  // Original Pebble.
+            break;
+
+        case WATCH_INFO_MODEL_PEBBLE_STEEL:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_PEBBLE_STEEL");  // Pebble Steel.
+            break;
+
+        case WATCH_INFO_MODEL_PEBBLE_TIME:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_PEBBLE_TIME");  // Pebble Time.
+            break;
+
+        case WATCH_INFO_MODEL_PEBBLE_TIME_STEEL:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_PEBBLE_TIME_STEEL");  // Pebble Time Steel.
+            break;
+
+        case WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_14");  // Pebble Time Round, 14mm lug size.
+            break;
+
+        case WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_PEBBLE_TIME_ROUND_20");  // Pebble Time Round, 20mm lug size.
+            break;
+
+        case WATCH_INFO_MODEL_PEBBLE_2_HR:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_PEBBLE_2_HR");  // Pebble 2 HR.
+            break;
+
+        case WATCH_INFO_MODEL_PEBBLE_2_SE:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_PEBBLE_2_SE");  // Pebble 2 SE.
+            break;
+
+        case WATCH_INFO_MODEL_PEBBLE_TIME_2:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_PEBBLE_TIME_2");  // Pebble Time 2.
+            break;
+
+        case WATCH_INFO_MODEL_COREDEVICES_C2D:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_COREDEVICES_C2D");  // CoreDevices C2D (Core 2 Duo)
+            break;
+
+        case WATCH_INFO_MODEL_COREDEVICES_CT2:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL_COREDEVICES_CT2");  // CoreDevices CT2 (Core Time 2)
+            break;
+
+        case WATCH_INFO_MODEL__MAX:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model WATCH_INFO_MODEL__MAX");  // Max
+            break;
+
+        default:
+            APP_LOG(APP_LOG_LEVEL_INFO, "watch_info_get_model UNKNOWN");
+            break;
+    }
+    #endif // DEBUG_HARDWARE_ID
+
+
     major_version = get_major_app_version();
     APP_LOG(APP_LOG_LEVEL_INFO, "get_major_app_version: %d", major_version);
-    
+
     if (persist_exists(MESSAGE_KEY_MAJOR_VERSION))
     {
         int stored_major_version = persist_read_int(MESSAGE_KEY_MAJOR_VERSION);
@@ -979,6 +1137,11 @@ void init()
 
 #ifdef USE_GENERIC_MAIN
 int main(void) {
+    #ifdef DEBUG_STACK
+        register uint32_t sp __asm__("sp");
+        stack_initial = sp;
+    #endif /* DEBUG_STACK */
+
     init();
     app_event_loop();
     deinit();
