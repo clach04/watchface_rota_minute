@@ -68,14 +68,12 @@
         #define HEALTH_POS GRect(0, 40, 200, 228)
         #define DATE_POS GRect(-5, 0, 200, 228) /* probably taller than really needed */
         #ifdef DRAW_BATTERY
-            #define BAT_POS GRect(5, 215, 200, 228)
+            #define BAT_POS GRect(5, 210, 200, 228)
         #else
             #define BAT_POS GRect(0, 205, 200, 228) /* probably taller than really needed */
         #endif /* DRAW_BATTERY */
 
-        // below untested
-        #define BT_POS GRect(0, 120, 200, 228) /* probably taller than really needed */
-
+        #define BT_POS GRect(0, 130, 200, 228) /* probably taller than really needed */
     #else  //  144x168  Original pebbles; Pebble Classic (aplite), Pebble Time (basalt), Pebble 2 (diorite), Pebble 2 Duo (flint)
         #define CLOCK_POS GRect(0, 52, 144, 168) /* probably taller than really needed */
         #define HEALTH_POS GRect(0, 40, 144, 168)
