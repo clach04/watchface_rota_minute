@@ -32,9 +32,9 @@
 #define DRAW_SMALL_BATTERY
 #endif
 
-#define QUIET_TIME_POS  GRect(20, 20, 60, 60)
+#define QUIET_TIME_POS  GRect(0, 0, 60, 60)
 //#define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
-//#define QUIET_TIME_IMAGE_GRECT GRect(20, 20, 20, 20)  // Example assumes a 20x20 image
+//#define QUIET_TIME_IMAGE_GRECT GRect(5, 5, 20, 20)  // Example assumes a 20x20 image
 
 // See https://developer.rebble.io/guides/best-practices/building-for-every-pebble/#available-defines-and-macros for hardware specific defines
 #ifdef PBL_ROUND /* 180x180 */
@@ -77,8 +77,8 @@
     #else  //  144x168  Original pebbles; Pebble Classic (aplite), Pebble Time (basalt), Pebble 2 (diorite), Pebble 2 Duo (flint)
         #define CLOCK_POS GRect(0, 52, 144, 168) /* probably taller than really needed */
         #define HEALTH_POS GRect(0, 40, 144, 168)
-        //#define BT_POS GRect(0, 100, 144, 168) /* probably taller than really needed */
-        #define BT_POS GRect(0, 20, 144, 168) /* probably taller than really needed */
+        #define BT_POS GRect(0, 100, 144, 168) /* probably taller than really needed */
+        //#define BT_POS GRect(0, 20, 144, 168) /* probably taller than really needed */
         //#define DATE_POS GRect(0, 148, 125, 168) /* bottom of "g" in "Aug" starting to be cut off . Top RHS may be be better (see Capinion/stormtrooper/spawn */
 
         #define DATE_POS GRect(0, -5, 140, 168) /* probably taller than really needed */
