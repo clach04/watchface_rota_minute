@@ -32,9 +32,9 @@
 #define DRAW_SMALL_BATTERY
 #endif
 
-#define QUIET_TIME_POS  GRect(0, 0, 60, 60)
-//#define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
-//#define QUIET_TIME_IMAGE_GRECT GRect(5, 5, 20, 20)  // Example assumes a 20x20 image
+//#define QUIET_TIME_POS  GRect(0, 0, 60, 60)
+#define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
+#define QUIET_TIME_IMAGE_GRECT GRect(5, 5, 20, 20)  // Example assumes a 20x20 image
 
 // See https://developer.rebble.io/guides/best-practices/building-for-every-pebble/#available-defines-and-macros for hardware specific defines
 #ifdef PBL_ROUND /* 180x180 */
