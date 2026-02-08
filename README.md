@@ -21,3 +21,8 @@ Supports all Pebble versions, from Pebble 2 (Diorite) to Aplite with quick view 
  * Configurable display hours or minutes as digits
 
 Uses watchface framework https://github.com/clach04/watchface_framework/.
+
+  * https://apps.rebble.io/en_US/application/57cdf8c0a789e1e0b800000d?hardware=aplite=&dev_settings=true
+  * https://apps.rebble.io/en_US/application/57cdf8c0a789e1e0b800000d?hardware=basalt=&dev_settings=true
+  * https://apps.rebble.io/en_US/application/57cdf8c0a789e1e0b800000d?hardware=chalk=&dev_settings=true
+  * https://apps.rebble.io/en_US/application/57cdf8c0a789e1e0b800000d?hardware=emery=&dev_settings=true
