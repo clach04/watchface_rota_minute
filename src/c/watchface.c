@@ -62,6 +62,9 @@ int          config_background_color;
 bool         config_time_vib_on_disconnect = false;
 static int major_version = 0;
 
+static int phone_battery_percent = -1;  // -1 means not available
+TextLayer *phone_battery_layer=NULL;  // TODO ifdef and relocate
+
 
 int last_day = -1;
 bool bluetooth_state = false;
@@ -369,7 +372,7 @@ void update_battery_proc(Layer *layer, GContext *ctx)
 }
 #endif /* DRAW_BATTERY */
 
-/* Battery level */
+/* Watch Battery level */
 void setup_battery(Window *window)
 {
 #ifdef DRAW_BATTERY
@@ -395,14 +398,57 @@ void setup_battery(Window *window)
 
 void cleanup_battery()
 {
-    battery_state_service_unsubscribe();
-#ifdef DRAW_BATTERY
-    layer_destroy(battery_layer);
-    gpath_destroy(battery_path);
-#else
     text_layer_destroy(battery_layer);
-#endif /* DRAW_BATTERY */
 }
+
+
+/* Phone Battery level */
+void setup_phone_battery(Window *window)
+{
+    phone_battery_layer = text_layer_create(PHONE_BAT_POS);
+    text_layer_set_text_color(phone_battery_layer, time_color);
+    text_layer_set_background_color(phone_battery_layer, GColorClear);
+    text_layer_set_font(phone_battery_layer, fonts_get_system_font(FONT_BAT_SYSTEM_NAME));
+    text_layer_set_text_alignment(phone_battery_layer, BAT_ALIGN);
+    layer_add_child(window_get_root_layer(window), text_layer_get_layer(phone_battery_layer));
+    text_layer_set_text(phone_battery_layer, MAX_BAT_STR);  // FIXME
+}
+
+void cleanup_phone_battery()
+{
+    text_layer_destroy(battery_layer);
+}
+
+void handle_phone_battery(BatteryChargeState charge_state) {
+    static char battery_text[] = MAX_BAT_STR;
+    battery_color=time_color;  // TODO review
+
+#ifdef PBL_COLOR
+    if (charge_state.is_charging)
+    {
+        battery_color = COLOR_FALLBACK(GColorGreen, time_color);
+    }
+    else
+    {
+        if (charge_state.charge_percent <= 20)
+        {
+            battery_color = GColorRed;
+        }
+    }
+#endif /* PBL_COLOR */
+
+    if (charge_state.is_charging)  // Not implemented yet, ready for future
+    {
+        snprintf(battery_text, sizeof(battery_text), "Charging");
+    }
+    else
+    {
+        snprintf(battery_text, sizeof(battery_text), BAT_FMT_STR, charge_state.charge_percent);
+    }
+    text_layer_set_text_color(phone_battery_layer, battery_color);
+    text_layer_set_text(phone_battery_layer, battery_text);
+}
+
 
 #ifdef QUIET_TIME_IMAGE
 BitmapLayer *quiet_time_blayer=NULL;
@@ -942,6 +988,26 @@ void in_recv_handler(DictionaryIterator *iterator, void *context)
             #endif /* NO_BATTERY */
         }
         APP_LOG(APP_LOG_LEVEL_DEBUG, "TIME COLOR DONE");
+    }
+
+    // TODO ifdef...
+    t = dict_find(iterator, MESSAGE_PHONE_BATTTERY_PERCENT);
+    if (t)
+    {
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_PHONE_BATTTERY_PERCENT");
+        APP_LOG(APP_LOG_LEVEL_INFO, "phone_battery_percent: %d", (int)t->value->int32);
+        if (phone_battery_percent != (int)t->value->int32)
+        {
+            BatteryChargeState charge_state;
+
+            phone_battery_percent = (int)t->value->int32;
+            charge_state.is_charging = false;  // TODO future expansion feature
+            charge_state.is_plugged = false;  // TODO future expansion feature
+            charge_state.charge_percent = phone_battery_percent;
+            /// force display update
+            //layer_mark_dirty(phone_battery_layer);
+            handle_phone_battery(charge_state);
+        }
     }
     /* NOTE if new entries are added, increase MAX_MESSAGE_SIZE_OUT macro */
 

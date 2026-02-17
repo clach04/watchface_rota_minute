@@ -15,7 +15,8 @@
             "TIME_COLOR",
             "VIBRATE_ON_DISCONNECT",
             "BACKGROUND_COLOR",
-            "MAJOR_VERSION"
+            "MAJOR_VERSION",
+            "PHONE_BATTTERY_PERCENT"
         ],
         "projectType": "native",
         "resources": {

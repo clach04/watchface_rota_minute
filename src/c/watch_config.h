@@ -63,6 +63,8 @@
     #endif  // end of original rectangle size
 #endif /* end of Round or rectangle */
 
+#define PHONE_BAT_POS GRect(0, 90, 144, 168)  // TODO move/platform fix debug test - NOTE still depends on (watch) BAT_ALIGN - shrink this
+
 /* for screen shots and font testing
 #define DEBUG  // If set will update each second and use seconds as minutes for checking updates (not the best for screenshots)
 #ifdef DEBUG
