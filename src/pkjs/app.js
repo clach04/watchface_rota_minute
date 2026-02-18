@@ -7,7 +7,7 @@ var clay = new Clay(clayConfig);
 
 // Battery level has changed
 function on_phone_battery_level_change(battery) {
-    logit("Battery Level: " + battery.level);
+    console.log("Battery Level: " + battery.level);
 
     var battery_level = 999;
     //   if(!isNumeric(battery.level))
