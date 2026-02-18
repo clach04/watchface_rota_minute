@@ -2,8 +2,16 @@ var Clay = require('pebble-clay');
 var clayConfig = require('./config');
 var clay = new Clay(clayConfig);
 
+
+// Phone Battery Reading
+// ------------------------------------------------------------------------------------------------------------------------------------------------ //
+
 // from https://github.com/clach04/pebble-VoiceRelay/blob/js_indent/src/js/pebble-js-app.js
 // Also see https://github.com/stopsatgreen/modernwebbook/blob/master/Code%20Examples/Chapter%2006/battery-event.html
+
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 // Battery level has changed
 function on_phone_battery_level_change(battery) {
@@ -12,6 +20,7 @@ function on_phone_battery_level_change(battery) {
     var battery_level = 999;
     //   if(!isNumeric(battery.level))
     battery_level = Math.floor(battery.level * 100);
+    console.log("battery_level post math: " + battery_level);
 
     if (!isNumeric(battery_level)) battery_level = 999;
     var dict = { "PHONE_BATTTERY_PERCENT": battery_level };
