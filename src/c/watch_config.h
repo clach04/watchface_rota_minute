@@ -76,7 +76,7 @@
         #ifdef DRAW_BATTERY
             #define BAT_POS GRect(5, 210, 200, 228)
         #else
-            #define BAT_POS GRect(0, 205, 200, 228) /* probably taller than really needed */
+            #define BAT_POS GRect(0, 205, 50, 18) /* FONT_KEY_GOTHIC_18 probably wider than really needed */
         #endif /* DRAW_BATTERY */
 
         #define BT_POS GRect(0, 130, 200, 228) /* probably taller than really needed */
@@ -92,7 +92,7 @@
         #ifdef DRAW_BATTERY
             #define BAT_POS GRect(5, 150, 144, 168)
         #else
-            #define BAT_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
+            #define BAT_POS GRect(0, 140, 50, 18) /* FONT_KEY_GOTHIC_18 probably wider than really needed */
         #endif /* DRAW_BATTERY */
     #endif  // end of original rectangle size
 #endif /* end of Round or rectangle */
