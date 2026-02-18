@@ -408,8 +408,8 @@ void setup_phone_battery(Window *window)
     phone_battery_layer = text_layer_create(PHONE_BAT_POS);
     text_layer_set_text_color(phone_battery_layer, time_color);
     text_layer_set_background_color(phone_battery_layer, GColorClear);
-    text_layer_set_font(phone_battery_layer, fonts_get_system_font(FONT_BAT_SYSTEM_NAME));
-    text_layer_set_text_alignment(phone_battery_layer, BAT_ALIGN);
+    text_layer_set_font(phone_battery_layer, fonts_get_system_font(FONT_PHONE_BAT_SYSTEM_NAME));
+    text_layer_set_text_alignment(phone_battery_layer, PHONE_BAT_ALIGN);
     layer_add_child(window_get_root_layer(window), text_layer_get_layer(phone_battery_layer));
     text_layer_set_text(phone_battery_layer, MAX_BAT_STR);  // FIXME
 }
