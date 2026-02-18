@@ -27,10 +27,13 @@
 #undef USE_HEALTH
 //#define UPDATE_HEALTH_ON_ACTIVITY  /* If not set, only updates step count display once per minute */
 
-#define DRAW_BATTERY
-#if PBL_DISPLAY_HEIGHT != 228  // 200x228 Pebble Time 2 (emery)  // FIXME this is basically an EMERY check :-(
-#define DRAW_SMALL_BATTERY
-#endif
+//#define DRAW_BATTERY
+#ifdef DRAW_BATTERY
+    #if PBL_DISPLAY_HEIGHT != 228  // 200x228 Pebble Time 2 (emery)  // FIXME this is basically an EMERY check :-(
+    #define DRAW_SMALL_BATTERY
+    #endif  //PBL_DISPLAY_HEIGHT != 228
+#endif  // DRAW_BATTERY
+
 
 //#define QUIET_TIME_POS  GRect(0, 0, 60, 60)
 #define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
