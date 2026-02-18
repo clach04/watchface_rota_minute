@@ -416,7 +416,7 @@ void setup_phone_battery(Window *window)
 
 void cleanup_phone_battery()
 {
-    text_layer_destroy(battery_layer);
+    text_layer_destroy(phone_battery_layer);
 }
 
 void handle_phone_battery(BatteryChargeState charge_state) {
@@ -814,7 +814,7 @@ void main_window_load(Window *window) {
 #ifndef NO_BATTERY
     setup_battery(window);
 #endif /* NO_BATTERY */
-
+    setup_phone_battery(window);
 #ifndef NO_BLUETOOTH
     /* setup BT layer AFTER (i.e. on top of) time layer */
     setup_bluetooth(window);
@@ -864,6 +864,7 @@ void main_window_unload(Window *window) {
 #ifndef NO_BATTERY
     cleanup_battery();
 #endif /* NO_BATTERY */
+    cleanup_phone_battery();
 #ifndef NO_DATE
     cleanup_date();
 #endif /* NO_DATE */
@@ -991,10 +992,10 @@ void in_recv_handler(DictionaryIterator *iterator, void *context)
     }
 
     // TODO ifdef...
-    t = dict_find(iterator, MESSAGE_PHONE_BATTTERY_PERCENT);
+    t = dict_find(iterator, MESSAGE_KEY_PHONE_BATTTERY_PERCENT);
     if (t)
     {
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_PHONE_BATTTERY_PERCENT");
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "got MESSAGE_KEY_PHONE_BATTTERY_PERCENT");
         APP_LOG(APP_LOG_LEVEL_INFO, "phone_battery_percent: %d", (int)t->value->int32);
         if (phone_battery_percent != (int)t->value->int32)
         {
