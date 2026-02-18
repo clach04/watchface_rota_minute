@@ -16,7 +16,7 @@
     **  [INFO] essage_outbox.c:49: app_message_open() called with app_message_outbox_size_maximum().
     **  [INFO] essage_outbox.c:52: This consumes 8200 bytes of heap memory, potentially more in the future!
     **  [INFO] message_inbox.c:13: app_message_open() called with app_message_inbox_size_maximum().
-    **  [INFO] message_inbox.c:16: This consumes 8200 bytes of heap memory, potentially more in the future!    
+    **  [INFO] message_inbox.c:16: This consumes 8200 bytes of heap memory, potentially more in the future!
     */
     #define MAX_MESSAGE_SIZES
     #define MAX_MESSAGE_SIZE_IN 200
@@ -57,8 +57,8 @@
 
 #ifndef BAT_FMT_STR
 #define BAT_FMT_STR "Bat: %d%%"
-#endif /* BAT_FMT_STR */
 #define MAX_BAT_STR "Bat: ??%"  // When Battery is 100, the percent symbol is deliberately not shown (buffer full/truncated)
+#endif /* BAT_FMT_STR */
 
 #ifndef FONT_BT_SYSTEM_NAME
 #define FONT_BT_SYSTEM_NAME FONT_KEY_GOTHIC_18

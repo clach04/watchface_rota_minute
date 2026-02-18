@@ -34,6 +34,9 @@
     #endif  //PBL_DISPLAY_HEIGHT != 228
 #endif  // DRAW_BATTERY
 
+#define BAT_FMT_STR "%d%%"
+#define MAX_BAT_STR "??%"  // When Battery is 100, the percent symbol is deliberately not shown (buffer full/truncated)
+
 
 //#define QUIET_TIME_POS  GRect(0, 0, 60, 60)
 #define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
