@@ -42,6 +42,7 @@
 #define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
 #define QUIET_TIME_IMAGE_GRECT GRect(5, 5, 20, 20)  // Example assumes a 20x20 image
 
+// https://developer.rebble.io/guides/app-resources/system-fonts/
 #define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_18
 #define FONT_BAT_PIXEL_HEIGHT 18
 #define FONT_BAT_STR_PIXEL_WIDTH 50  // FONT_KEY_GOTHIC_18 maybe wider than really needed?
@@ -82,6 +83,15 @@
         #endif /* DRAW_BATTERY */
 
         #define BT_POS GRect(0, 130, 200, 228) /* probably taller than really needed */
+
+        #undef FONT_BAT_SYSTEM_NAME
+        #undef FONT_BAT_PIXEL_HEIGHT
+        //#define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_24
+        #define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_24_BOLD
+        #define FONT_BAT_PIXEL_HEIGHT 24
+        //#define FONT_BAT_STR_PIXEL_WIDTH 50  // FONT_KEY_GOTHIC_18 maybe wider than really needed?
+
+
     #else  //  144x168  Original pebbles; Pebble Classic (aplite), Pebble Time (basalt), Pebble 2 (diorite), Pebble 2 Duo (flint)
         #define CLOCK_POS GRect(0, 52, 144, 168) /* probably taller than really needed */
         #define HEALTH_POS GRect(0, 40, 144, 168)
