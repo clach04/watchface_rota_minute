@@ -89,7 +89,7 @@
         //#define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_24
         #define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_24_BOLD
         #define FONT_BAT_PIXEL_HEIGHT 24
-        //#define FONT_BAT_STR_PIXEL_WIDTH 50  // FONT_KEY_GOTHIC_18 maybe wider than really needed?
+        //#define FONT_BAT_STR_PIXEL_WIDTH 50  // FONT_KEY_GOTHIC_24 Just enough for 3 characters, Charging shows as "Cha" - TODO revisit this
 
 
     #else  //  144x168  Original pebbles; Pebble Classic (aplite), Pebble Time (basalt), Pebble 2 (diorite), Pebble 2 Duo (flint)
