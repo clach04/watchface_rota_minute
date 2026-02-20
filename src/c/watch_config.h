@@ -27,14 +27,25 @@
 #undef USE_HEALTH
 //#define UPDATE_HEALTH_ON_ACTIVITY  /* If not set, only updates step count display once per minute */
 
-#define DRAW_BATTERY
-#if PBL_DISPLAY_HEIGHT != 228  // 200x228 Pebble Time 2 (emery)  // FIXME this is basically an EMERY check :-(
-#define DRAW_SMALL_BATTERY
-#endif
+//#define DRAW_BATTERY
+#ifdef DRAW_BATTERY
+    #if PBL_DISPLAY_HEIGHT != 228  // 200x228 Pebble Time 2 (emery)  // FIXME this is basically an EMERY check :-(
+    #define DRAW_SMALL_BATTERY
+    #endif  //PBL_DISPLAY_HEIGHT != 228
+#endif  // DRAW_BATTERY
+
+#define BAT_FMT_STR "%d%%"
+#define MAX_BAT_STR "??%"  // When Battery is 100, the percent symbol is deliberately not shown (buffer full/truncated)
+
 
 //#define QUIET_TIME_POS  GRect(0, 0, 60, 60)
 #define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
 #define QUIET_TIME_IMAGE_GRECT GRect(5, 5, 20, 20)  // Example assumes a 20x20 image
+
+// https://developer.rebble.io/guides/app-resources/system-fonts/
+#define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_18
+#define FONT_BAT_PIXEL_HEIGHT 18
+#define FONT_BAT_STR_PIXEL_WIDTH 50  // FONT_KEY_GOTHIC_18 maybe wider than really needed?
 
 // See https://developer.rebble.io/guides/best-practices/building-for-every-pebble/#available-defines-and-macros for hardware specific defines
 #ifdef PBL_ROUND /* 180x180 */
@@ -69,11 +80,18 @@
         #define DATE_POS GRect(-5, 0, 200, 228) /* probably taller than really needed */
         #ifdef DRAW_BATTERY
             #define BAT_POS GRect(5, 210, 200, 228)
-        #else
-            #define BAT_POS GRect(0, 205, 200, 228) /* probably taller than really needed */
         #endif /* DRAW_BATTERY */
 
         #define BT_POS GRect(0, 130, 200, 228) /* probably taller than really needed */
+
+        #undef FONT_BAT_SYSTEM_NAME
+        #undef FONT_BAT_PIXEL_HEIGHT
+        //#define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_24
+        #define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_24_BOLD
+        #define FONT_BAT_PIXEL_HEIGHT 24
+        //#define FONT_BAT_STR_PIXEL_WIDTH 50  // FONT_KEY_GOTHIC_24 Just enough for 3 characters, Charging shows as "Cha" - TODO revisit this
+
+
     #else  //  144x168  Original pebbles; Pebble Classic (aplite), Pebble Time (basalt), Pebble 2 (diorite), Pebble 2 Duo (flint)
         #define CLOCK_POS GRect(0, 52, 144, 168) /* probably taller than really needed */
         #define HEALTH_POS GRect(0, 40, 144, 168)
@@ -85,11 +103,21 @@
 
         #ifdef DRAW_BATTERY
             #define BAT_POS GRect(5, 150, 144, 168)
-        #else
-            #define BAT_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
         #endif /* DRAW_BATTERY */
     #endif  // end of original rectangle size
+
+#ifndef DRAW_BATTERY
+    #define BAT_POS GRect(PBL_DISPLAY_WIDTH * 22 / 1000, (PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - PBL_DISPLAY_HEIGHT * 18 /* 1.8% border spacing */ / 1000), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
+#endif /* DRAW_BATTERY */
+
 #endif /* end of Round or rectangle */
+
+#define PHONE_BAT_ALIGN GTextAlignmentRight
+#define PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH - (PBL_DISPLAY_WIDTH * 22 / 1000), (PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - PBL_DISPLAY_HEIGHT * 18 /* 1.8% border spacing */ / 1000), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
+
+//#define PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH, PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - (PBL_DISPLAY_HEIGHT / 1000 * 100 /* 10%  1.8% border spacing */ ), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
+//#define PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH, (PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - (PBL_DISPLAY_HEIGHT / 1000 * 300)), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
+//#define  PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH, 140, FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)   // this works as expected, above does not - very confusing
 
 /* for screen shots and font testing
 #define DEBUG  // If set will update each second and use seconds as minutes for checking updates (not the best for screenshots)
@@ -101,6 +129,9 @@
 #define DEBUG_TIME_SCREENSHOT
 // ensure quiet time and bluetooth disconnection info is shown
 #ifndef quiet_time_is_active  // so not aplite
+#define quiet_time_is_active() true  // DEBUG!
+#else
+#undef quiet_time_is_active  // See if we can force this to always be true
 #define quiet_time_is_active() true  // DEBUG!
 #endif
 #define bluetooth_connection_service_peek() false  // DEBUG!

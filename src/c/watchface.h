@@ -16,7 +16,7 @@
     **  [INFO] essage_outbox.c:49: app_message_open() called with app_message_outbox_size_maximum().
     **  [INFO] essage_outbox.c:52: This consumes 8200 bytes of heap memory, potentially more in the future!
     **  [INFO] message_inbox.c:13: app_message_open() called with app_message_inbox_size_maximum().
-    **  [INFO] message_inbox.c:16: This consumes 8200 bytes of heap memory, potentially more in the future!    
+    **  [INFO] message_inbox.c:16: This consumes 8200 bytes of heap memory, potentially more in the future!
     */
     #define MAX_MESSAGE_SIZES
     #define MAX_MESSAGE_SIZE_IN 200
@@ -57,8 +57,8 @@
 
 #ifndef BAT_FMT_STR
 #define BAT_FMT_STR "Bat: %d%%"
-#endif /* BAT_FMT_STR */
 #define MAX_BAT_STR "Bat: ??%"  // When Battery is 100, the percent symbol is deliberately not shown (buffer full/truncated)
+#endif /* BAT_FMT_STR */
 
 #ifndef FONT_BT_SYSTEM_NAME
 #define FONT_BT_SYSTEM_NAME FONT_KEY_GOTHIC_18
@@ -71,6 +71,10 @@
 #ifndef FONT_BAT_SYSTEM_NAME
 #define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_18
 #endif /* FONT_BAT_SYSTEM_NAME */
+
+#ifndef FONT_PHONE_BAT_SYSTEM_NAME
+#define FONT_PHONE_BAT_SYSTEM_NAME FONT_BAT_SYSTEM_NAME
+#endif /* FONT_PHONE_BAT_SYSTEM_NAME */
 
 #ifndef FONT_SYSTEM_NAME
 /*
@@ -86,6 +90,10 @@
 #ifndef BAT_ALIGN
 #define BAT_ALIGN GTextAlignmentLeft
 #endif /* BAT_ALIGN */
+
+#ifndef PHONE_BAT_ALIGN
+#define PHONE_BAT_ALIGN BAT_ALIGN
+#endif /* PHONE_BAT_ALIGN */
 
 #ifndef DATE_ALIGN
 #define DATE_ALIGN GTextAlignmentRight

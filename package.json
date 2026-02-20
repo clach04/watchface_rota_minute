@@ -19,7 +19,8 @@
             "MAJOR_VERSION",
             "MINUTES_COLOR",
             "HOUR_AS_TEXT",
-            "ARC_WIDTH"
+            "ARC_WIDTH",
+            "PHONE_BATTTERY_PERCENT"
         ],
         "projectType": "native",
         "resources": {
