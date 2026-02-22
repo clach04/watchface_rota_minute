@@ -52,21 +52,38 @@
 
 // See https://developer.rebble.io/guides/best-practices/building-for-every-pebble/#available-defines-and-macros for hardware specific defines
 #ifdef PBL_ROUND /* 180x180 */
+    #if PBL_DISPLAY_HEIGHT == 180  // 180x180 Pebble Round (chalk)
 /*TODO center/move right*/
-    #define CLOCK_POS GRect(0, 52, 180, 180) /* probably taller than really needed */
-    #define HEALTH_POS GRect(0, 40, 180, 180)
-    #define BT_POS GRect(0, 100, 180, 180) /* probably taller than really needed */
+        #define CLOCK_POS GRect(0, 52, 180, 180) /* probably taller than really needed */
+        #define HEALTH_POS GRect(0, 40, 180, 180)
+        #define BT_POS GRect(0, 100, 180, 180) /* probably taller than really needed */
 
-    #define DATE_ALIGN GTextAlignmentCenter
-    #define DATE_POS GRect(0, 120, 180, 180) /* probably taller than really needed */
+        #define DATE_ALIGN GTextAlignmentCenter
+        #define DATE_POS GRect(0, 120, 180, 180) /* probably taller than really needed */
 
-    #define BAT_ALIGN GTextAlignmentCenter
-    #ifdef DRAW_BATTERY
-        #define BAT_POS GRect(85, 10, 180, 180) /* probably taller than really needed */
+        #define BAT_ALIGN GTextAlignmentCenter
+        #ifdef DRAW_BATTERY
+            #define BAT_POS GRect(85, 10, 180, 180) /* probably taller than really needed */
+        #else
+            #define BAT_POS GRect(0, 140, 180, 180) /* probably taller than really needed */
+        #endif /* DRAW_BATTERY */
     #else
-        #define BAT_POS GRect(0, 140, 180, 180) /* probably taller than really needed */
-    #endif /* DRAW_BATTERY */
+        // gabbro - Pebble Round 2
+        #define CLOCK_POS GRect(0, 52, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
+        #define HEALTH_POS GRect(0, 40, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
+        #define BT_POS GRect(0, 100, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
 
+        #define DATE_ALIGN GTextAlignmentCenter
+        #define DATE_POS GRect(0, PERCENT_HEIGHT(600), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
+
+        #define BAT_ALIGN GTextAlignmentCenter
+        #ifdef DRAW_BATTERY
+            #define BAT_POS GRect(85, 10, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
+        #else
+            #define BAT_POS GRect(0, PERCENT_HEIGHT(700), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
+        #endif /* DRAW_BATTERY */
+    #endif /* PLAY_HEIGHT == 180 */
+    // TODO PHONE_BAT_POS
 #else /* PBL_RECT */
     //#define DATE_FMT_STR "%a\n%b\n%d"
     //#define MAX_DATE_STR "Thu\n00\nAug" /* if custom version of DATE_FMT_STR is set, MAX_DATE_STR  needs to be updated too */
