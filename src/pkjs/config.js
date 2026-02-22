@@ -64,7 +64,7 @@ module.exports = [
             },
             {
                 "type": "slider",
-                "capabilities": ["NOT_PLATFORM_EMERY"],
+                "capabilities": ["NOT_PLATFORM_EMERY", "NOT_PLATFORM_GABBRO"],
                 "label": "Arc width",
                 "messageKey": "ARC_WIDTH",
                 "defaultValue": 3 * 7,
@@ -75,6 +75,16 @@ module.exports = [
             {
                 "type": "slider",
                 "capabilities": ["PLATFORM_EMERY"],
+                "label": "Arc width",
+                "messageKey": "ARC_WIDTH",
+                "defaultValue": 3 * 7,
+                "min": 7,
+                "max": 8 * 7,
+                "step": 1
+            },
+            {
+                "type": "slider",
+                "capabilities": ["PLATFORM_GABBRO"],
                 "label": "Arc width",
                 "messageKey": "ARC_WIDTH",
                 "defaultValue": 3 * 7,
