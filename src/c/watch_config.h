@@ -59,13 +59,13 @@
         #define BT_POS GRect(0, 100, 180, 180) /* probably taller than really needed */
 
         #define DATE_ALIGN GTextAlignmentCenter
-        #define DATE_POS GRect(0, 120, 180, 180) /* probably taller than really needed */
+        #define DATE_POS GRect(0, PERCENT_HEIGHT(600), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
 
         #define BAT_ALIGN GTextAlignmentCenter
         #ifdef DRAW_BATTERY
             #define BAT_POS GRect(85, 10, 180, 180) /* probably taller than really needed */
         #else
-            #define BAT_POS GRect(0, 140, 180, 180) /* probably taller than really needed */
+            #define BAT_POS GRect(PERCENT_WIDTH(500) - (FONT_BAT_STR_PIXEL_WIDTH / 2), PERCENT_HEIGHT(680), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
         #endif /* DRAW_BATTERY */
     #else
         // gabbro - Pebble Round 2
@@ -83,7 +83,10 @@
             #define BAT_POS GRect(0, PERCENT_HEIGHT(700), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
         #endif /* DRAW_BATTERY */
     #endif /* PLAY_HEIGHT == 180 */
-    // TODO PHONE_BAT_POS
+
+    #define PHONE_BAT_ALIGN GTextAlignmentCenter
+    #define PHONE_BAT_POS GRect(PERCENT_WIDTH(500) - (FONT_BAT_STR_PIXEL_WIDTH / 2), PERCENT_HEIGHT(300), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
+
 #else /* PBL_RECT */
     //#define DATE_FMT_STR "%a\n%b\n%d"
     //#define MAX_DATE_STR "Thu\n00\nAug" /* if custom version of DATE_FMT_STR is set, MAX_DATE_STR  needs to be updated too */
@@ -130,14 +133,15 @@
     #define BAT_POS GRect(PERCENT_WIDTH(22), (PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - PERCENT_HEIGHT(18)), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
 #endif /* DRAW_BATTERY */
 
+    #define PHONE_BAT_ALIGN GTextAlignmentRight
+    #define PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH - PERCENT_WIDTH(22), (PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - PERCENT_HEIGHT(18)), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
+
+    //#define PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH, PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - (PBL_DISPLAY_HEIGHT / 1000 * 100 /* 10%  1.8% border spacing */ ), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
+    //#define PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH, (PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - (PBL_DISPLAY_HEIGHT / 1000 * 300)), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
+    //#define  PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH, 140, FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)   // this works as expected, above does not - very confusing
+
 #endif /* end of Round or rectangle */
 
-#define PHONE_BAT_ALIGN GTextAlignmentRight
-#define PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH - PERCENT_WIDTH(22), (PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - PERCENT_HEIGHT(18)), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
-
-//#define PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH, PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - (PBL_DISPLAY_HEIGHT / 1000 * 100 /* 10%  1.8% border spacing */ ), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
-//#define PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH, (PBL_DISPLAY_HEIGHT - FONT_BAT_PIXEL_HEIGHT - (PBL_DISPLAY_HEIGHT / 1000 * 300)), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
-//#define  PHONE_BAT_POS GRect(PBL_DISPLAY_WIDTH - FONT_BAT_STR_PIXEL_WIDTH, 140, FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)   // this works as expected, above does not - very confusing
 
 /* for screen shots and font testing
 #define DEBUG  // If set will update each second and use seconds as minutes for checking updates (not the best for screenshots)
