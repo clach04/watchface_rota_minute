@@ -58,13 +58,13 @@
     #define BT_POS GRect(0, 100, 180, 180) /* probably taller than really needed */
 
     #define DATE_ALIGN GTextAlignmentCenter
-    #define DATE_POS GRect(0, 120, 180, 180) /* probably taller than really needed */
+    #define DATE_POS GRect(0, PERCENT_HEIGHT(600), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
 
     #define BAT_ALIGN GTextAlignmentCenter
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(85, 10, 180, 180) /* probably taller than really needed */
     #else
-        #define BAT_POS GRect(0, 140, 180, 180) /* probably taller than really needed */
+        #define BAT_POS GRect(0, PERCENT_HEIGHT(680), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
     #endif /* DRAW_BATTERY */
 
 #else /* PBL_RECT */
