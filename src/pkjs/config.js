@@ -1,12 +1,12 @@
 var meta = require('../../package.json');
 
 module.exports = [
-    { 
-        "type": "heading", 
+    {
+        "type": "heading",
         "defaultValue": "Preferences" ,
         "size": 3
-    }, 
-    { 
+    },
+    {
         "type": "section",
         "items": [
             {
@@ -64,11 +64,22 @@ module.exports = [
             },
             {
                 "type": "slider",
+                "capabilities": ["NOT_PLATFORM_EMERY"],
                 "label": "Arc width",
                 "messageKey": "ARC_WIDTH",
                 "defaultValue": 3 * 7,
                 "min": 7,
                 "max": 5 * 7,
+                "step": 1
+            },
+            {
+                "type": "slider",
+                "capabilities": ["PLATFORM_EMERY"],
+                "label": "Arc width",
+                "messageKey": "ARC_WIDTH",
+                "defaultValue": 3 * 7,
+                "min": 7,
+                "max": 8 * 7,
                 "step": 1
             }
         ]
