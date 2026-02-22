@@ -64,12 +64,11 @@
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(85, 10, 180, 180) /* probably taller than really needed */
     #else
-        #define BAT_POS GRect(0, PERCENT_HEIGHT(680), PBL_DISPLAY_WIDTH, FONT_BAT_PIXEL_HEIGHT)  // TODO revisit width, full screen ensures centered but wasteful
+        #define BAT_POS GRect(PERCENT_WIDTH(500) - (FONT_BAT_STR_PIXEL_WIDTH / 2), PERCENT_HEIGHT(680), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
     #endif /* DRAW_BATTERY */
 
     #define PHONE_BAT_ALIGN GTextAlignmentCenter
-    //#define PHONE_BAT_POS GRect(PERCENT_WIDTH(50) - (FONT_BAT_STR_PIXEL_WIDTH / 2), PERCENT_HEIGHT(400), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
-    #define PHONE_BAT_POS GRect(0, PERCENT_HEIGHT(300), PBL_DISPLAY_WIDTH, FONT_BAT_PIXEL_HEIGHT)  // TODO revisit width, full screen ensures centered but wasteful
+    #define PHONE_BAT_POS GRect(PERCENT_WIDTH(500) - (FONT_BAT_STR_PIXEL_WIDTH / 2), PERCENT_HEIGHT(300), FONT_BAT_STR_PIXEL_WIDTH, FONT_BAT_PIXEL_HEIGHT)
 
 #else /* PBL_RECT */
     //#define DATE_FMT_STR "%a\n%b\n%d"
