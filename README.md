@@ -1,5 +1,7 @@
 # Watchface Rota Minute
 
+https://github.com/clach04/watchface_rota_minute
+
 Analog digital hybrid Pebble watchface. Available from https://apps.rebble.io/en_US/application/57cdf8c0a789e1e0b800000d?dev_settings=true
 
 Also see https://github.com/clach04/clock_rota_minute_pillow
@@ -23,7 +25,9 @@ Supports all Pebble versions, from Pebble Time 2 (Emery) to Aplite with quick vi
  * Configurable Minutes color
  * Configurable display hours or minutes as digits
 
-Uses watchface framework https://github.com/clach04/watchface_framework/.
+Uses watchface framework https://github.com/clach04/watchface_framework/
+
+https://cloudpebble.repebble.com/ide/import/github/clach04/watchface_rota_minute
 
   * https://apps.rebble.io/en_US/application/57cdf8c0a789e1e0b800000d?hardware=aplite=&dev_settings=true
   * https://apps.rebble.io/en_US/application/57cdf8c0a789e1e0b800000d?hardware=basalt=&dev_settings=true
